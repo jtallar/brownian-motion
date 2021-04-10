@@ -1,7 +1,7 @@
-# Life Simulation
+# Brownian Motion Simulation
 To generate executable and run the life simulation
 1. Run `./prepare.sh` in root.
-2. Run `./target/tp2-simu-1.0/life.sh -Dsize=100 -Dinit=40 -Dfill=60 -Dseed=System.nanoTime() -Dsteps=Long.MAX_VALUE -Dout=data -Dpel=false -Drule="=.2.|.=.3/=.3" -Ddim=2 -Dmoore=1 -Dcenter=false`, where:
+2. Run `./target/tp3-simu-1.0/brownian-motion.sh -Dsize=100 -Dinit=40 -Dfill=60 -Dseed=System.nanoTime() -Dsteps=Long.MAX_VALUE -Dout=data -Dpel=false -Drule="=.2.|.=.3/=.3" -Ddim=2 -Dmoore=1 -Dcenter=false`, where:
     - `size` square matrix side size
     - `init`: initial square matrix side size 
     - `fill`: initial square matrix occupation percentage
@@ -12,8 +12,8 @@ To generate executable and run the life simulation
     - `dim`: matrix amount of dimensions
     - `moore`: moore neighbour cells depth
     - `center`: true for centered to origin (0, 0, 0) output and input
-    - the example above equals to run `./life.sh`
-3. [OPTIONAL] Run  `./target/tp2-simu-1.0/life.sh -Din=dataIn`, where
+    - the example above equals to run `./brownian-motion.sh`
+3. [OPTIONAL] Run  `./target/tp3-simu-1.0/brownian-motion.sh -Din=dataIn`, where
     - `in`: initializer file and also output file (must finish in new line)
     - `steps`, `moore`, `pal` and `rule` can be added
     - this method replaces `size`, `init`, `fill`, `seed`, `dim` and `out`
@@ -30,7 +30,7 @@ Standard Conway's Game of Life ruleset.
 - A cell survives if it has either 2 or 3 living neighbours. 
 - A cell is born if it has exactly 3 living neighbours.
 
-`./target/tp2-simu-1.0/life.sh -Drule="=.2.|.=.3/=.3" -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
+`./target/tp3-simu-1.0/brownian-motion.sh -Drule="=.2.|.=.3/=.3" -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
 
 ### Rule 2 - 2D System 2
 Custom ruleset with different Moore neighbourhood range.
@@ -38,7 +38,7 @@ Custom ruleset with different Moore neighbourhood range.
 - A cell survives if it has either 9 or 10 living neighbours. 
 - A cell is born if it has between 1 and 4 living neighbours.
 
-`./target/tp2-simu-1.0/life.sh -Drule=">.8.&.<.11/>.0.&.<.5" -Dmoore=2 -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
+`./target/tp3-simu-1.0/brownian-motion.sh -Drule=">.8.&.<.11/>.0.&.<.5" -Dmoore=2 -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
 
 ### Rule 3 - 2D System 3
 Custom ruleset with possibility of surviving without neighbours.
@@ -46,7 +46,7 @@ Custom ruleset with possibility of surviving without neighbours.
 - A cell survives if it has at most 2 living neighbours. 
 - A cell is born if it has exactly 3 living neighbours.
 
-`./target/tp2-simu-1.0/life.sh -Drule="<.3/=.3" -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
+`./target/tp3-simu-1.0/brownian-motion.sh -Drule="<.3/=.3" -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
 
 ## 3D Systems Used
 All 3D systems used will have a 101x101x101 grid, with particles starting at a 41x41x41 smaller grid. 
@@ -60,7 +60,7 @@ Standard Conway's Game of Life ruleset applied to 3D.
 - A cell survives if it has either 2 or 3 living neighbours. 
 - A cell is born if it has exactly 3 living neighbours.
 
-`./target/tp2-simu-1.0/life.sh -Drule="=.2.|.=.3/=.3" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
+`./target/tp3-simu-1.0/brownian-motion.sh -Drule="=.2.|.=.3/=.3" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
 
 ### Rule 5 - 3D System 2
 Known 3D ruleset named 5766.
@@ -68,7 +68,7 @@ Known 3D ruleset named 5766.
 - A cell survives if it has between 5 and 7 living neighbours. 
 - A cell is born if it has exactly 6 living neighbours.
 
-`./target/tp2-simu-1.0/life.sh -Drule=">.4.&.<.8/=.6" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
+`./target/tp3-simu-1.0/brownian-motion.sh -Drule=">.4.&.<.8/=.6" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
 
 ### Rule 6 - 3D System 3
 Custom ruleset with more possibilities of surviving.
@@ -76,7 +76,7 @@ Custom ruleset with more possibilities of surviving.
 - A cell survives if it has between 6 and 10 living neighbours. 
 - A cell is born if it has either 7 or 8 living neighbours.
 
-`./target/tp2-simu-1.0/life.sh -Drule=">.5.&.<.11/=.7.|.=.8" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
+`./target/tp3-simu-1.0/brownian-motion.sh -Drule=">.5.&.<.11/=.7.|.=.8" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
 
 # Analysis Tools
 Analysis can be performed in multiple ways.
