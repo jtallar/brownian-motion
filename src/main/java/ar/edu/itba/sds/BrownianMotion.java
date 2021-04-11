@@ -9,7 +9,7 @@ import java.util.*;
 public class BrownianMotion {
     private static final String DEFAULT_STATIC = "static.txt";
     private static final String DEFAULT_DYNAMIC = "dynamic.txt";
-    private static final int DEFAULT_MAX_EVENTS = 100;
+    private static final int DEFAULT_MAX_EVENTS = 1000;
 
     private static final String STATIC_PARAM = "static";
     private static final String DYNAMIC_PARAM = "dynamic";
@@ -89,6 +89,7 @@ public class BrownianMotion {
                 // Write particle state to dynamic file
                 // TODO: Check si esto va antes o despues de hacer el evento
                 try {
+                    // TODO: Ver si ponemos algun marcador de "particulas que chocaron" para pintarlas de otro color luego
                     writeParticleState(particles);
                 } catch (IOException e) {
                     System.err.println("Error writing dynamic file");
