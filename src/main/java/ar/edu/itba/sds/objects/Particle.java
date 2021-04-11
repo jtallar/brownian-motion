@@ -41,6 +41,20 @@ public class Particle {
 
 
     /**
+     * Advance deltaT in time, adjusting particle position
+     * @param deltaT interval of time from last update in position
+     */
+    public void advanceTime(double deltaT) {
+        this.x += this.vx * deltaT;
+        this.y += this.vy * deltaT;
+    }
+
+    private void setVelocity(double vx, double vy) {
+        this.vx = vx;
+        this.vy = vy;
+    }
+
+    /**
      * @return duration of time until particle collides with a vertical wall
      *         returns null if vx = 0
      */
@@ -87,7 +101,7 @@ public class Particle {
      * Update particle to simulate it bouncing off a vertical wall
      */
     public void bounceX() {
-        this.vx = -this.vx;
+        setVelocity(-this.vx, this.vy);
         this.collisionCount++;
     }
 
@@ -95,7 +109,7 @@ public class Particle {
      * Update particle to simulate it bouncing off a horizontal wall
      */
     public void bounceY() {
-        this.vy = -this.vy;
+        setVelocity(this.vx, -this.vy);
         this.collisionCount++;
     }
 
@@ -113,12 +127,10 @@ public class Particle {
         double J = (2 * this.m * other.m * prodCross) / (sigma * (this.m + other.m));
         double Jx = J * deltaX / sigma, Jy = J * deltaY / sigma;
 
-        this.vx = this.vx + Jx / this.m;
-        this.vy = this.vy + Jy / this.m;
+        this.setVelocity(this.vx + Jx / this.m, this.vy + Jy / this.m);
         this.collisionCount++;
 
-        other.vx = other.vx - Jx / other.m;
-        other.vy = other.vy - Jy / other.m;
+        other.setVelocity(other.vx - Jx / other.m, other.vy - Jy / other.m);
         other.collisionCount++;
     }
 
@@ -126,17 +138,33 @@ public class Particle {
         return collisionCount;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getVx() {
+        return vx;
+    }
+
+    public double getVy() {
+        return vy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Particle)) return false;
-        Particle molecule = (Particle) o;
-        return Double.compare(molecule.x, x) == 0 && Double.compare(molecule.y, y) == 0;
+        Particle particle = (Particle) o;
+        return id == particle.id;
     }
 
     @Override
     public int hashCode() {
-        return Double.hashCode(x) * 31 + Double.hashCode(y);
+        return Integer.hashCode(id);
     }
 
     @Override

@@ -57,8 +57,18 @@ public class Event implements Comparable<Event> {
         return particle2;
     }
 
-    public EventType getType() {
-        return type;
+    public void performEvent() {
+        switch (type) {
+            case TWO_PARTICLES:
+                particle1.bounce(particle2);
+                break;
+            case VERTICAL_WALL:
+                particle1.bounceX();
+                break;
+            case HORIZONTAL_WALL:
+                particle1.bounceY();
+                break;
+        }
     }
 
     /**
