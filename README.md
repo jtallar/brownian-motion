@@ -7,7 +7,15 @@
 `python 3.8`
 
 ## Particle generator
-
+To generate initial particle positions by creating `static.txt` and `dynamic.txt`. 
+Generates N small particles with random positions and speeds, and 1 stopped big particle at the center. 
+Run `python3 generator.py N L rp mp RP MP`, where:
+   - `N`: number of small particles
+   - `L`: simulation area side
+   - `rp`: small particle radius
+   - `mp`: small particle mass
+   - `RP`: big particle radius
+   - `MP`: big particle mass
 
 ## Simulation
 To generate executable and run the life simulation
