@@ -1,4 +1,15 @@
-# Brownian Motion Simulation
+# Brownian Motion
+
+## What to Install
+- `python3 -m pip install numpy`
+- Download and install OVITO from: https://www.ovito.org/
+### Versions
+`python 3.8`
+
+## Particle generator
+
+
+## Simulation
 To generate executable and run the life simulation
 1. Run `./prepare.sh` in root.
 2. Run `./target/tp3-simu-1.0/brownian-motion.sh -Dsize=100 -Dinit=40 -Dfill=60 -Dseed=System.nanoTime() -Dsteps=Long.MAX_VALUE -Dout=data -Dpel=false -Drule="=.2.|.=.3/=.3" -Ddim=2 -Dmoore=1 -Dcenter=false`, where:
