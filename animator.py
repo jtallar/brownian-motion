@@ -15,6 +15,7 @@ ovito_file.write(str(N+4))
 corners = '\n\n'+C+'0 0 0'+WHITE+'\n'+C+'0 '+str(L)+' 0'+WHITE+'\n'+C+str(L)+' 0 0'+WHITE+'\n'+C+str(L)+' '+str(L)+' 0'+WHITE
 ovito_file.write(corners)
 
+# TODO: Mostramos el vector velocidad en la animacion?
 for i in range(N):
     line = dynamic_file.readline().split(' ')
     (x,y,r) = (line[0]+' ', line[1]+' ', static_file.readline().split()[0]+' ')

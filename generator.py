@@ -39,6 +39,7 @@ if big_mass <= small_mass:
     print('Big particle mass must be higher than small particle mass!')
     sys.exit(1)
 
+# TODO: Si N es muy grande, no encuentra nunca lugar
 particles = gen.particles(N, L, small_rad, small_mass, big_rad, big_mass)
 
 gen.data_files(L, particles)
