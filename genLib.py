@@ -1,6 +1,15 @@
 import numpy as np
 import random
+import math
 import objects as obj
+
+# TODO: Check uniform distribution OK
+def generate_speed():
+    v_mod = random.uniform(0, 2)
+    vx = random.uniform(-v_mod, v_mod)
+    vy_mod = math.sqrt(v_mod ** 2 - vx ** 2)
+    vy = vy_mod * (1 if random.random() > 0.5 else -1)
+    return (vx, vy)
 
 def check_superposition(part, row, col, matrix):
     for r in range(row - 1, row + 2):
@@ -35,6 +44,7 @@ def particles(n, side, small_r, small_m, big_r, big_m):
     # Create n smaller particles
     count = 0
     while count < n:
+        # TODO: Check x, y limits (using r)
         (x, y) = (random.uniform(small_r, side - small_r), random.uniform(small_r, side - small_r))
         # Row, Col go from 1 to M
         (row, col) = get_row_col(x, y, cell_width, M)
@@ -44,8 +54,7 @@ def particles(n, side, small_r, small_m, big_r, big_m):
         if check_superposition(part, row, col, head_matrix):
             continue
 
-        # TODO: Generate random speeds
-        (part.vx, part.vy) = (0, 0)
+        (part.vx, part.vy) = generate_speed()
 
         head_matrix[row][col] = obj.ParticleNode(part, head_matrix[row][col])
         part_list.append(part)
