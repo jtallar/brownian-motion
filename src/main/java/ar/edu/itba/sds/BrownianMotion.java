@@ -126,8 +126,8 @@ public class BrownianMotion {
     private static void writeParticleState(List<Particle> particles)
             throws IOException {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("*\n%.7E\n", time));
-        particles.forEach(p -> sb.append(String.format("%.7E %.7E %.7E %.7E\n", p.getX(), p.getY(), p.getVx(), p.getVy())));
+        sb.append(String.format("\n*\n%.7E", time));
+        particles.forEach(p -> sb.append(String.format("\n%.7E %.7E %.7E %.7E", p.getX(), p.getY(), p.getVx(), p.getVy())));
 
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(dynamicFilename, true))) {
             writer.write(sb.toString());
