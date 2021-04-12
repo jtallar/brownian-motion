@@ -57,6 +57,10 @@ public class Event implements Comparable<Event> {
         return particle2;
     }
 
+    public boolean isWallType() {
+        return type == EventType.VERTICAL_WALL || type == EventType.HORIZONTAL_WALL;
+    }
+
     public void performEvent() {
         switch (type) {
             case TWO_PARTICLES:

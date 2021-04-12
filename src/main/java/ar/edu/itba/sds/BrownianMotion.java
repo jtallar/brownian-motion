@@ -9,14 +9,16 @@ import java.util.*;
 public class BrownianMotion {
     private static final String DEFAULT_STATIC = "static.txt";
     private static final String DEFAULT_DYNAMIC = "dynamic.txt";
-    private static final int DEFAULT_MAX_EVENTS = 1000;
+    private static final String DEFAULT_MAX_EVENTS = "10000";
 
     private static final String STATIC_PARAM = "static";
     private static final String DYNAMIC_PARAM = "dynamic";
+    private static final String MAX_EVENTS_PARAM = "maxEvents";
 
     private static final int ERROR_STATUS = 1;
 
     private static String staticFilename, dynamicFilename;
+    private static int maxEvents;
     private static int N;
     private static double L;
     private static double time = 0.0;
@@ -35,6 +37,7 @@ public class BrownianMotion {
 
         // Parse static file
         double[] particleRadius, particleMass;
+        int bigParticleIndex;
         try(BufferedReader reader = new BufferedReader(new FileReader(staticFilename))) {
             N = Integer.parseInt(reader.readLine());
             L = Double.parseDouble(reader.readLine());
@@ -43,7 +46,7 @@ public class BrownianMotion {
             particleMass = new double[N];
 
             // Fill radius and mass arrays
-            fillProperties(reader, particleRadius, particleMass);
+            bigParticleIndex = fillProperties(reader, particleRadius, particleMass);
 
         } catch (FileNotFoundException e) {
             System.err.println("Static file not found");
@@ -57,11 +60,13 @@ public class BrownianMotion {
 
         // Parse dynamic file
         List<Particle> particles;
+        Particle bigParticle;
         try(BufferedReader reader = new BufferedReader(new FileReader(dynamicFilename))) {
             // Set initial time
             time = Double.parseDouble(reader.readLine());
             // Create particle list
             particles = createParticleList(reader, particleRadius, particleMass);
+            bigParticle = particles.get(bigParticleIndex);
         } catch (FileNotFoundException e) {
             System.err.println("Dynamic file not found");
             System.exit(ERROR_STATUS);
@@ -77,9 +82,8 @@ public class BrownianMotion {
 
         // Simulation
         final Queue<Event> eventQueue = createQueueFromList(particles);
-        // TODO: Check criterio de corte
         int eventsTriggered = 0;
-        while (!eventQueue.isEmpty() && eventsTriggered < DEFAULT_MAX_EVENTS) {
+        while (!eventQueue.isEmpty() && eventsTriggered < maxEvents) {
             final Event event = eventQueue.poll();
             if (event.isValid()) {
                 final double eventTime = event.getTime();
@@ -87,15 +91,15 @@ public class BrownianMotion {
                 particles.forEach(p -> p.advanceTime(eventTime - time));
                 time = eventTime;
                 // Write particle state to dynamic file
-                // TODO: Check si esto va antes o despues de hacer el evento
                 try {
-                    // TODO: Ver si ponemos algun marcador de "particulas que chocaron" para pintarlas de otro color luego
                     writeParticleState(particles);
                 } catch (IOException e) {
                     System.err.println("Error writing dynamic file");
                     System.exit(ERROR_STATUS);
                     return;
                 }
+                // Check if big particle hit a wall
+                if (bigParticleToWall(event, bigParticle)) break;
                 // Update colliding particles velocities
                 event.performEvent();
                 // Determine future collisions
@@ -105,6 +109,15 @@ public class BrownianMotion {
                 eventsTriggered++;
             }
         }
+
+        if (eventsTriggered == maxEvents)
+            System.out.printf("Reached %d events, exiting...\n", maxEvents);
+        else
+            System.out.println("Big particle reached border, exiting...");
+    }
+
+    private static boolean bigParticleToWall(Event event, Particle bigParticle) {
+        return event.isWallType() && event.getParticle1().equals(bigParticle);
     }
 
     private static void addFutureCollisions(Queue<Event> queue, Particle particle, List<Particle> particles) {
@@ -179,10 +192,19 @@ public class BrownianMotion {
         return particles;
     }
 
-    private static void fillProperties(BufferedReader reader, double[] radiusArray, double[] massArray)
+    /**
+     * @param reader buffered reader from static file
+     * @param radiusArray I/O array to fill with particle radius
+     * @param massArray I/O array to fill with particle mass
+     * @return index corresponding to big particle
+     * @throws IOException if error parsing file or not enough lines
+     */
+    private static int fillProperties(BufferedReader reader, double[] radiusArray, double[] massArray)
             throws IOException {
         if (radiusArray.length != massArray.length) throw new IllegalArgumentException("Radius and mass array must be same sized!");
 
+        double maxRadius = -1.0;
+        int maxRadiusIndex = -1;
         for (int i = 0; i < radiusArray.length; i++) {
             String line = reader.readLine();
             if (line == null) throw new IOException();
@@ -190,7 +212,14 @@ public class BrownianMotion {
             String[] props = line.split(" ");
             radiusArray[i] = Double.parseDouble(props[0]);
             massArray[i] = Double.parseDouble(props[1]);
+
+            if (radiusArray[i] > maxRadius) {
+                maxRadius = radiusArray[i];
+                maxRadiusIndex = i;
+            }
         }
+
+        return maxRadiusIndex;
     }
 
     private static void argumentParsing() throws ArgumentException {
@@ -198,5 +227,13 @@ public class BrownianMotion {
 
         staticFilename = properties.getProperty(STATIC_PARAM, DEFAULT_STATIC);
         dynamicFilename = properties.getProperty(DYNAMIC_PARAM, DEFAULT_DYNAMIC);
+
+        String maxEventsString = properties.getProperty(MAX_EVENTS_PARAM, DEFAULT_MAX_EVENTS);
+        try {
+            maxEvents = Integer.parseInt(maxEventsString);
+            if (maxEvents <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            throw new ArgumentException("maxEvents number must be supplied using -DmaxEvents and it must be a positive number (maxEvents > 0)");
+        }
     }
 }
