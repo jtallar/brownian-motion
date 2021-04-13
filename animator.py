@@ -34,6 +34,10 @@ for line in static_file:
 
 ovito_file = open("simu.xyz", "w")
 
+# TODO: Juntar con el de generator y los demas params para tomar todo desde un JSON
+MAX_V_MOD = 2.0
+MAX_V_MOD_SQRT = MAX_V_MOD * MAX_V_MOD
+
 # TODO: Mostramos el vector velocidad en la animacion?
 restart = True
 target_time = 0
@@ -56,8 +60,10 @@ for linenum, line in enumerate(dynamic_file):
     if time >= target_time:
         line_vec = line.rstrip().split(' ')
         (x,y,r) = (line_vec[0]+' ', line_vec[1]+' ', particle_radius[p_id]+' ')
-        color = WHITE
-        ovi_line = r+x+y+str(p_id)+' '+color+'\n'
+        (vx,vy) = (float(line_vec[2]), float(line_vec[3]))
+        v_mod_sq = vx * vx + vy * vy
+        color = ' ' + str(v_mod_sq/MAX_V_MOD_SQRT) + ' ' + str(1.0-v_mod_sq/MAX_V_MOD_SQRT) + ' ' + str(1.0-v_mod_sq/MAX_V_MOD_SQRT)
+        ovi_line = r+x+y+str(p_id)+color+'\n'
         ovito_file.write(ovi_line)
         p_id += 1
 
