@@ -3,13 +3,10 @@ import random
 import math
 import objects as obj
 
-# TODO: Check uniform distribution OK
 def generate_speed(max_v_mod):
     v_mod = random.uniform(0, max_v_mod)
-    vx = random.uniform(-v_mod, v_mod)
-    vy_mod = math.sqrt(v_mod ** 2 - vx ** 2)
-    vy = vy_mod * (1 if random.random() > 0.5 else -1)
-    return (vx, vy)
+    angle = random.uniform(0, 2 * math.pi)
+    return (math.cos(angle) * v_mod, math.sin(angle) * v_mod)
 
 def check_superposition(part, row, col, matrix):
     for r in range(row - 1, row + 2):
