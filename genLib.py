@@ -4,8 +4,8 @@ import math
 import objects as obj
 
 # TODO: Check uniform distribution OK
-def generate_speed():
-    v_mod = random.uniform(0, 2)
+def generate_speed(max_v_mod):
+    v_mod = random.uniform(0, max_v_mod)
     vx = random.uniform(-v_mod, v_mod)
     vy_mod = math.sqrt(v_mod ** 2 - vx ** 2)
     vy = vy_mod * (1 if random.random() > 0.5 else -1)
@@ -27,7 +27,7 @@ def get_row_col(x, y, cell_width, M):
     return (int(cell_index / M + 1), int(cell_index % M + 1))
 
 # Generate random particles
-def particles(n, side, small_r, small_m, big_r, big_m):
+def particles(n, side, max_v_mod, small_r, small_m, big_r, big_m):
     part_list = []
     
     # Matrix with list of particles for each cell to check collision
@@ -54,7 +54,7 @@ def particles(n, side, small_r, small_m, big_r, big_m):
         if check_superposition(part, row, col, head_matrix):
             continue
 
-        (part.vx, part.vy) = generate_speed()
+        (part.vx, part.vy) = generate_speed(max_v_mod)
 
         head_matrix[row][col] = obj.ParticleNode(part, head_matrix[row][col])
         part_list.append(part)
