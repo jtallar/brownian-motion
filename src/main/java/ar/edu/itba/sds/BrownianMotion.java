@@ -77,8 +77,12 @@ public class BrownianMotion {
             return;
         }
 
+        // Print file parsing time
         long endTime = System.currentTimeMillis();
         System.out.printf("File parsing time \t\t ⏱  %g seconds\n", (endTime - startTime) / 1000.0);
+
+        // Measure simulation time
+        startTime = System.currentTimeMillis();
 
         // Simulation
         final Queue<Event> eventQueue = createQueueFromList(particles);
@@ -109,6 +113,10 @@ public class BrownianMotion {
                 eventsTriggered++;
             }
         }
+
+        // Print simulation time
+        endTime = System.currentTimeMillis();
+        System.out.printf("Simulation time \t\t ⏱  %g seconds\n", (endTime - startTime) / 1000.0);
 
         if (eventsTriggered == maxEvents)
             System.out.printf("Reached %d events, exiting...\n", maxEvents);
