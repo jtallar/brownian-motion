@@ -3,6 +3,8 @@ import random
 import math
 import objects as obj
 
+MAX_ITERATIONS = 100000
+
 def generate_speed(max_v_mod):
     v_mod = random.uniform(0, max_v_mod)
     angle = random.uniform(0, 2 * math.pi)
@@ -39,9 +41,11 @@ def particles(n, side, max_v_mod, small_r, small_m, big_r, big_m):
     part_list.append(part)
 
     # Create n smaller particles
-    count = 0
-    while count < n:
-        # TODO: Check x, y limits (using r)
+    total_k = 0
+    (count, iterations) = (0, 0)
+    while count < n and iterations < MAX_ITERATIONS:
+        iterations += 1
+        # Generate random x, y
         (x, y) = (random.uniform(small_r, side - small_r), random.uniform(small_r, side - small_r))
         # Row, Col go from 1 to M
         (row, col) = get_row_col(x, y, cell_width, M)
@@ -52,11 +56,14 @@ def particles(n, side, max_v_mod, small_r, small_m, big_r, big_m):
             continue
 
         (part.vx, part.vy) = generate_speed(max_v_mod)
+        total_k += 0.5 * small_m * (part.vx ** 2 + part.vy ** 2)
 
         head_matrix[row][col] = obj.ParticleNode(part, head_matrix[row][col])
         part_list.append(part)
         
         count += 1
+
+    print(f'Generated {count + 1} particles totalling {total_k:.7E}J')
 
     return part_list
 
