@@ -9,93 +9,42 @@
 ## Particle generator
 To generate initial particle positions by creating `static.txt` and `dynamic.txt`. 
 Generates N small particles with random positions and speeds, and 1 stopped big particle at the center. 
-Run `python3 generator.py N L rp mp RP MP`, where:
-   - `N`: number of small particles
-   - `L`: simulation area side
-   - `rp`: small particle radius
-   - `mp`: small particle mass
-   - `RP`: big particle radius
-   - `MP`: big particle mass
+Run `python3 generator.py N L rp mp RP MP vm`, where:
+   - `N`: number of small particles, 100 < N < 150
+   - `L`: simulation area side, L > 0
+   - `rp`: small particle radius, rp >= 0
+   - `mp`: small particle mass, mp > 0
+   - `RP`: big particle radius, RP > rp
+   - `MP`: big particle mass, MP > mp
+   - `vm`: max particle speed module, vm > 0
 
 ## Simulation
 To generate executable and run the life simulation
 1. Run `./prepare.sh` in root.
-2. Run `./target/tp3-simu-1.0/brownian-motion.sh -Dsize=100 -Dinit=40 -Dfill=60 -Dseed=System.nanoTime() -Dsteps=Long.MAX_VALUE -Dout=data -Dpel=false -Drule="=.2.|.=.3/=.3" -Ddim=2 -Dmoore=1 -Dcenter=false`, where:
-    - `size` square matrix side size
-    - `init`: initial square matrix side size 
-    - `fill`: initial square matrix occupation percentage
-    - `steps`: maximum amount of steps performed
-    - `out`: output file filepath
-    - `pel`: sets parallel processing
-    - `rule`: Survival/Birth rule
-    - `dim`: matrix amount of dimensions
-    - `moore`: moore neighbour cells depth
-    - `center`: true for centered to origin (0, 0, 0) output and input
-    - the example above equals to run `./brownian-motion.sh`
-3. [OPTIONAL] Run  `./target/tp3-simu-1.0/brownian-motion.sh -Din=dataIn`, where
-    - `in`: initializer file and also output file (must finish in new line)
-    - `steps`, `moore`, `pal` and `rule` can be added
-    - this method replaces `size`, `init`, `fill`, `seed`, `dim` and `out`
+2. Run `./target/tp3-simu-1.0/brownian-motion.sh -Dstatic=static.txt -Ddynamic=dynamic.txt -DmaxEvents=10000`, where:
+   - `static`: static file filepath
+   - `dynamic`: dynamic file filepath
+   - `maxEvents`: maximum amount of events to analyze, maxEvents > 0
 
-## 2D Systems Used
-All 2D systems used will have a 101x101 grid, with particles starting at a 41x41 smaller grid. 
-Seed value will be randomized, steps will not be limited and output will be generated at corresponding directory.
-Center option will be set to true, as well as parallel processing, and dimensions will be set to 2.
-Fill will take different values in the interval (0,100].
+   The example above equals to run `./target/tp3-simu-1.0/brownian-motion.sh`, as those are the default values
 
-### Rule 1 - 2D System 1
-Standard Conway's Game of Life ruleset. 
-- Moore neighbourhood of range 1.
-- A cell survives if it has either 2 or 3 living neighbours. 
-- A cell is born if it has exactly 3 living neighbours.
+## Animation Tool
+Generates `simu.xyz` using information from `static.txt` and `dynamic.txt`.
+Run `python3 animator.py dt`, where:
+   - `dt`: minimum timestep between events, dt >= 0
 
-`./target/tp3-simu-1.0/brownian-motion.sh -Drule="=.2.|.=.3/=.3" -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
+To view the animation, you must open `simu.xyz` with Ovito:
+`./bin/ovito simu.xyz`. Particles will be colored in a scale of colors from cian (static particles) to red (high velocity module), showing how fast each particle is going.
 
-### Rule 2 - 2D System 2
-Custom ruleset with different Moore neighbourhood range.
-- Moore neighbourhood of range 2.
-- A cell survives if it has either 9 or 10 living neighbours. 
-- A cell is born if it has between 1 and 4 living neighbours.
-
-`./target/tp3-simu-1.0/brownian-motion.sh -Drule=">.8.&.<.11/>.0.&.<.5" -Dmoore=2 -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
-
-### Rule 3 - 2D System 3
-Custom ruleset with possibility of surviving without neighbours.
-- Moore neighbourhood of range 1.
-- A cell survives if it has at most 2 living neighbours. 
-- A cell is born if it has exactly 3 living neighbours.
-
-`./target/tp3-simu-1.0/brownian-motion.sh -Drule="<.3/=.3" -Dsize=101 -Dinit=41 -Ddim=2 -Dpel=true -Dcenter=true -Dfill=60`
-
-## 3D Systems Used
-All 3D systems used will have a 101x101x101 grid, with particles starting at a 41x41x41 smaller grid. 
-Seed value will be randomized, steps will not be limited and output will be generated at corresponding directory.
-Center option will be set to true, as well as parallel processing, and dimensions will be set to 2.
-Fill will take different values in the interval (0,100].
-
-### Rule 4 - 3D System 1
-Standard Conway's Game of Life ruleset applied to 3D. 
-- Moore neighbourhood of range 1.
-- A cell survives if it has either 2 or 3 living neighbours. 
-- A cell is born if it has exactly 3 living neighbours.
-
-`./target/tp3-simu-1.0/brownian-motion.sh -Drule="=.2.|.=.3/=.3" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
-
-### Rule 5 - 3D System 2
-Known 3D ruleset named 5766.
-- Moore neighbourhood of range 1.
-- A cell survives if it has between 5 and 7 living neighbours. 
-- A cell is born if it has exactly 6 living neighbours.
-
-`./target/tp3-simu-1.0/brownian-motion.sh -Drule=">.4.&.<.8/=.6" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
-
-### Rule 6 - 3D System 3
-Custom ruleset with more possibilities of surviving.
-- Moore neighbourhood of range 1.
-- A cell survives if it has between 6 and 10 living neighbours. 
-- A cell is born if it has either 7 or 8 living neighbours.
-
-`./target/tp3-simu-1.0/brownian-motion.sh -Drule=">.5.&.<.11/=.7.|.=.8" -Dsize=101 -Dinit=41 -Ddim=3 -Dpel=true -Dcenter=true -Dfill=60`
+### Column Mapping 
+Configure the file column mapping as follows:
+   - Column 1 - Radius
+   - Column 2 - Position - X
+   - Column 3 - Position - Y
+   - Column 4 - Particle Identifier
+   - Column 5 - Color - R
+   - Column 6 - Color - G
+   - Column 7 - Color - B
 
 # Analysis Tools
 Analysis can be performed in multiple ways.
@@ -136,32 +85,3 @@ This script can be used to run any of the rules specified before multiple times,
 `./rule-multianalysis.sh rule_num fill_start fill_step repetitions`
 
 The script runs the simulation for each available fill percentage from `fill_start` to the highest `fill_start + K * fill_step` that is lower or equal than 100. Then, it runs `multipleAnalysis.py` with the output data directory. The plots can be found at directory `pics_ruleN`, where N is the rule number provided. Values corresponding to each plot can also be found at file `pics_ruleN/outN.txt`, being N the rule number both times.
-
-# Animation Tool
-Generates `simu.xyz` given a simulation file as input. If simulation file is named `data`, then:
-`python3 preprocessing.py < data`
-
-To view the animation, you must open `simu.xyz` with Ovito:
-`./bin/ovito simu.xyz`
-
-After configuring column mapping, to render particles as cubes, go to Visual elements -> Particles 
-and in Particle display, select `Cube/Box` as Standard shape.
-
-## 2D Column Mapping 
-If your simulation is a 2D file, configure the file column mapping as follows:
-   - Column 1 - Position - X
-   - Column 2 - Position - Y
-   - Column 3 - Radius
-   - Column 4 - Color - R
-   - Column 5 - Color - G
-   - Column 6 - Color - B
-
-## 3D Column Mapping
-If your simulation is a 3D file, configure the file column mapping as follows:
-   - Column 1 - Position - X
-   - Column 2 - Position - Y
-   - Column 3 - Position - Z
-   - Column 4 - Radius
-   - Column 5 - Color - R
-   - Column 6 - Color - G
-   - Column 7 - Color - B
