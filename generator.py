@@ -44,7 +44,6 @@ if max_v_mod <= 0:
     print('Max velocity module must be positive!')
     sys.exit(1)
 
-# TODO: Si N es muy grande, no encuentra nunca lugar
 particles = gen.particles(N, L, max_v_mod, small_rad, small_mass, big_rad, big_mass)
 
 gen.data_files(L, particles)
