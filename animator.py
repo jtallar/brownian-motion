@@ -11,17 +11,24 @@ def write_corners(ovito_file, N, L):
     ovito_file.write(corners)
 
 # Read params
-if len(sys.argv) != 2:
+if len(sys.argv) != 3:
     print(f'Wrong number of args!\n'
-          f'You need to specify delta t (dt).\n'
+          f'You need to specify delta t (dt) and initial max velocity module (vm).\n'
           f'Must run with\n'
-          f'\tpython3 animator.py dt')
+          f'\tpython3 animator.py dt vm')
     sys.exit(1)
 
 delta_t = float(sys.argv[1])
 if delta_t < 0:
     print('Delta t must be positive or zero (print all events)!')
     sys.exit(1)
+
+# TODO: Juntar con el de generator y los demas params para tomar todo desde un JSON
+max_v_mod = float(sys.argv[2])
+if max_v_mod <= 0:
+    print('Max velocity module must be positive!')
+    sys.exit(1)
+max_v_mod_sqrt = max_v_mod * max_v_mod
 
 dynamic_file = open("dynamic.txt", "r")
 
@@ -33,10 +40,6 @@ for line in static_file:
     particle_radius.append(line.split()[0])
 
 ovito_file = open("simu.xyz", "w")
-
-# TODO: Juntar con el de generator y los demas params para tomar todo desde un JSON
-MAX_V_MOD = 2.0
-MAX_V_MOD_SQRT = MAX_V_MOD * MAX_V_MOD
 
 # TODO: Mostramos el vector velocidad en la animacion?
 restart = True
@@ -62,7 +65,7 @@ for linenum, line in enumerate(dynamic_file):
         (x,y,r) = (line_vec[0]+' ', line_vec[1]+' ', particle_radius[p_id]+' ')
         (vx,vy) = (float(line_vec[2]), float(line_vec[3]))
         v_mod_sq = vx * vx + vy * vy
-        color = ' ' + str(v_mod_sq/MAX_V_MOD_SQRT) + ' ' + str(1.0-v_mod_sq/MAX_V_MOD_SQRT) + ' ' + str(1.0-v_mod_sq/MAX_V_MOD_SQRT)
+        color = ' ' + str(v_mod_sq/max_v_mod_sqrt) + ' ' + str(1.0-v_mod_sq/max_v_mod_sqrt) + ' ' + str(1.0-v_mod_sq/max_v_mod_sqrt)
         ovi_line = r+x+y+str(p_id)+color+'\n'
         ovito_file.write(ovi_line)
         p_id += 1

@@ -30,8 +30,9 @@ To generate executable and run the life simulation
 
 ## Animation Tool
 Generates `simu.xyz` using information from `static.txt` and `dynamic.txt`.
-Run `python3 animator.py dt`, where:
+Run `python3 animator.py dt vm`, where:
    - `dt`: minimum timestep between events, dt >= 0
+   - `vm`: max particle speed module (coloured red), vm > 0
 
 To view the animation, you must open `simu.xyz` with Ovito:
 `./bin/ovito simu.xyz`. Particles will be colored in a scale of colors from cian (static particles) to red (high velocity module), showing how fast each particle is going.
