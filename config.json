@@ -1,0 +1,15 @@
+{
+	"static_file": "static.txt",
+    "dynamic_file": "dynamic.txt",
+    
+    "N": 149,
+    "L": 6,
+    "small_radius": 0.2,
+    "small_mass": 0.9,
+    "big_radius": 0.7,
+    "big_mass": 2.0,
+    "max_v_mod": 2.0,
+
+    "maxEvents": 10000,
+    "delta_time": 0.05
+}

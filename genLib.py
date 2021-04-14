@@ -68,13 +68,13 @@ def particles(n, side, max_v_mod, small_r, small_m, big_r, big_m):
     return part_list
 
 #Generate dynamic and static files, reading N and L from arg
-def data_files(side, particles):
-    static_file = open("static.txt", "w")
+def data_files(side, particles, static_filename, dynamic_filename):
+    static_file = open(static_filename, "w")
     static_file.write(str(len(particles)))
     static_file.write('\n')
     static_file.write(str(side))
 
-    dynamic_file = open("dynamic.txt", "w")
+    dynamic_file = open(dynamic_filename, "w")
     dynamic_file.write('0')       # dynamic time
 
     for p in particles:

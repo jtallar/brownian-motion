@@ -1,50 +1,33 @@
 import sys
+import json
 import genLib as gen
+import utils
 
-# Read params
-if len(sys.argv) != 8:
-    print(f'Wrong number of args!\n'
-          f'You need to specify number of small particles (N), simulation area side (L), small particle radius (rp) and mass (mp), big particle radius (RP) and mass (MP), and max velocity module (vm).\n'
-          f'Must run with\n'
-          f'\tpython3 generator.py N L rp mp RP MP vm')
-    sys.exit(1)
+# Read params from config.json
+with open("config.json") as file:
+    config = json.load(file)
 
-N = int(sys.argv[1])
-if N <= 100 or N >= 150:
-    print('Number of small particles N must be between 101 and 149!')
-    sys.exit(1)
+static_filename = utils.read_config_param(
+    config, "static_file", lambda el : el, lambda el : False)
+dynamic_filename = utils.read_config_param(
+    config, "dynamic_file", lambda el : el, lambda el : False)
 
-L = int(sys.argv[2])
-if L <= 0:
-    print('Area side L must be positive!')
-    sys.exit(1)
-
-small_rad = float(sys.argv[3])
-if small_rad < 0:
-    print('Small particle radius must be positive or cero!')
-    sys.exit(1)
-
-small_mass = float(sys.argv[4])
-if small_mass <= 0:
-    print('Small particle mass must be positive!')
-    sys.exit(1)
-
-big_rad = float(sys.argv[5])
-if big_rad <= small_rad:
-    print('Big particle radius must be higher than small particle radius!')
-    sys.exit(1)
-
-big_mass = float(sys.argv[6])
-if big_mass <= small_mass:
-    print('Big particle mass must be higher than small particle mass!')
-    sys.exit(1)
-
-max_v_mod = float(sys.argv[7])
-if max_v_mod <= 0:
-    print('Max velocity module must be positive!')
-    sys.exit(1)
+N = utils.read_config_param(
+    config, "N", lambda el : int(el), lambda el : el <= 100 or el >= 150)
+L = utils.read_config_param(
+    config, "L", lambda el : float(el), lambda el : el <= 0)
+small_rad = utils.read_config_param(
+    config, "small_radius", lambda el : float(el), lambda el : el < 0)
+small_mass = utils.read_config_param(
+    config, "small_mass", lambda el : float(el), lambda el : el <= 0)
+big_rad = utils.read_config_param(
+    config, "big_radius", lambda el : float(el), lambda el : el <= small_rad)
+big_mass = utils.read_config_param(
+    config, "big_mass", lambda el : float(el), lambda el : el <= small_mass)
+max_v_mod = utils.read_config_param(
+    config, "max_v_mod", lambda el : float(el), lambda el : el <= 0)
 
 particles = gen.particles(N, L, max_v_mod, small_rad, small_mass, big_rad, big_mass)
 
-gen.data_files(L, particles)
-print(f'Generated files static.txt and dynamic.txt')
+gen.data_files(L, particles, static_filename, dynamic_filename)
+print(f'Generated files {static_filename} and {dynamic_filename}')
