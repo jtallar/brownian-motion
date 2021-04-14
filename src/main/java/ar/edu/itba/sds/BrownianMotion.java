@@ -2,18 +2,19 @@ package ar.edu.itba.sds;
 
 import ar.edu.itba.sds.objects.Event;
 import ar.edu.itba.sds.objects.Particle;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BrownianMotion {
-    private static final String DEFAULT_STATIC = "static.txt";
-    private static final String DEFAULT_DYNAMIC = "dynamic.txt";
-    private static final String DEFAULT_MAX_EVENTS = "10000";
+    private static final String DEFAULT_CONFIG = "config.json";
+    private static final String CONFIG_PARAM = "config";
 
-    private static final String STATIC_PARAM = "static";
-    private static final String DYNAMIC_PARAM = "dynamic";
-    private static final String MAX_EVENTS_PARAM = "maxEvents";
+    private static final String STATIC_CONFIG_KEY = "static_file";
+    private static final String DYNAMIC_CONFIG_KEY = "dynamic_file";
+    private static final String MAX_EVENTS_CONFIG_KEY = "maxEvents";
 
     private static final int ERROR_STATUS = 1;
 
@@ -232,16 +233,22 @@ public class BrownianMotion {
 
     private static void argumentParsing() throws ArgumentException {
         Properties properties = System.getProperties();
+        String configFilename = properties.getProperty(CONFIG_PARAM, DEFAULT_CONFIG);
 
-        staticFilename = properties.getProperty(STATIC_PARAM, DEFAULT_STATIC);
-        dynamicFilename = properties.getProperty(DYNAMIC_PARAM, DEFAULT_DYNAMIC);
-
-        String maxEventsString = properties.getProperty(MAX_EVENTS_PARAM, DEFAULT_MAX_EVENTS);
-        try {
-            maxEvents = Integer.parseInt(maxEventsString);
-            if (maxEvents <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            throw new ArgumentException("maxEvents number must be supplied using -DmaxEvents and it must be a positive number (maxEvents > 0)");
+        try(BufferedReader reader = new BufferedReader(new FileReader(configFilename))) {
+            JSONObject config = new JSONObject(reader.lines().collect(Collectors.joining()));
+            staticFilename = config.getString(STATIC_CONFIG_KEY);
+            dynamicFilename = config.getString(DYNAMIC_CONFIG_KEY);
+            try {
+                maxEvents = config.getInt(MAX_EVENTS_CONFIG_KEY);
+                if (maxEvents <= 0) throw new NumberFormatException();
+            } catch (NumberFormatException e) {
+                throw new ArgumentException("maxEvents number must be supplied using -DmaxEvents and it must be a positive number (maxEvents > 0)");
+            }
+        } catch (FileNotFoundException e) {
+            throw new ArgumentException(String.format("Config file %s not found", configFilename));
+        } catch (IOException e) {
+            throw new ArgumentException("Error parsing config file");
         }
     }
 }
