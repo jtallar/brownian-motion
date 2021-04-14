@@ -1,4 +1,6 @@
 import sys
+import json
+import utils
 
 WHITE = ' 255 255 255'
 GREEN = ' 0 255 0'
@@ -10,28 +12,23 @@ def write_corners(ovito_file, N, L):
     corners = '\n\n'+C+'0 0 0'+WHITE+'\n'+C+'0 '+str(L)+' 0'+WHITE+'\n'+C+str(L)+' 0 0'+WHITE+'\n'+C+str(L)+' '+str(L)+' 0'+WHITE+'\n'
     ovito_file.write(corners)
 
-# Read params
-if len(sys.argv) != 3:
-    print(f'Wrong number of args!\n'
-          f'You need to specify delta t (dt) and initial max velocity module (vm).\n'
-          f'Must run with\n'
-          f'\tpython3 animator.py dt vm')
-    sys.exit(1)
+# Read params from config.json
+with open("config.json") as file:
+    config = json.load(file)
 
-delta_t = float(sys.argv[1])
-if delta_t < 0:
-    print('Delta t must be positive or zero (print all events)!')
-    sys.exit(1)
+static_filename = utils.read_config_param(
+    config, "static_file", lambda el : el, lambda el : False)
+dynamic_filename = utils.read_config_param(
+    config, "dynamic_file", lambda el : el, lambda el : False)
 
-# TODO: Juntar con el de generator y los demas params para tomar todo desde un JSON
-max_v_mod = float(sys.argv[2])
-if max_v_mod <= 0:
-    print('Max velocity module must be positive!')
-    sys.exit(1)
+delta_t = utils.read_config_param(
+    config, "delta_time", lambda el : float(el), lambda el : el < 0)
+max_v_mod = utils.read_config_param(
+    config, "max_v_mod", lambda el : float(el), lambda el : el <= 0)
 
-dynamic_file = open("dynamic.txt", "r")
+dynamic_file = open(dynamic_filename, "r")
 
-static_file = open("static.txt", "r")
+static_file = open(static_filename, "r")
 N = int(static_file.readline())
 L = float(static_file.readline())
 particle_radius = []
