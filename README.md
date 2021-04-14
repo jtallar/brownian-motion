@@ -36,7 +36,7 @@ To generate executable and run the life simulation
 
 ## Animation Tool
 Generates `simu.xyz` using information from `static_file` and `dynamic_file`.
-Run `python3 animator.py dt vm`, using the following parameters from `config.json`:
+Run `python3 animator.py`, using the following parameters from `config.json`:
 
    `static_file`, `dynamic_file`, `delta_time`, `max_v_mod`
 
