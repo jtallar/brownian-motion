@@ -29,7 +29,7 @@ Run `python3 generator.py`, using the following parameters from `config.json`:
 
 ## Simulation
 To generate executable and run the life simulation
-1. Run `./prepare.sh` in root.
+1. Run `./prepare.sh` in root to generate executable (only required once).
 2. Run `./target/tp3-simu-1.0/brownian-motion.sh`, using the following parameters from `config.json`:
    
    `static_file`, `dynamic_file`, `max_events`
