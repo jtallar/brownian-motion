@@ -10,6 +10,6 @@
     "big_mass": 2.0,
     "max_v_mod": 2.0,
 
-    "maxEvents": 10000,
+    "max_events": 10000,
     "delta_time": 0.05
 }

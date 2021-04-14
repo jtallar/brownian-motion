@@ -3,6 +3,7 @@ package ar.edu.itba.sds;
 import ar.edu.itba.sds.objects.Event;
 import ar.edu.itba.sds.objects.Particle;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.*;
 import java.util.*;
@@ -14,7 +15,7 @@ public class BrownianMotion {
 
     private static final String STATIC_CONFIG_KEY = "static_file";
     private static final String DYNAMIC_CONFIG_KEY = "dynamic_file";
-    private static final String MAX_EVENTS_CONFIG_KEY = "maxEvents";
+    private static final String MAX_EVENTS_CONFIG_KEY = "max_events";
 
     private static final int ERROR_STATUS = 1;
 
@@ -243,12 +244,14 @@ public class BrownianMotion {
                 maxEvents = config.getInt(MAX_EVENTS_CONFIG_KEY);
                 if (maxEvents <= 0) throw new NumberFormatException();
             } catch (NumberFormatException e) {
-                throw new ArgumentException("maxEvents number must be supplied using -DmaxEvents and it must be a positive number (maxEvents > 0)");
+                throw new ArgumentException("max_events number must be a positive number (max_events > 0)");
             }
         } catch (FileNotFoundException e) {
             throw new ArgumentException(String.format("Config file %s not found", configFilename));
         } catch (IOException e) {
             throw new ArgumentException("Error parsing config file");
+        } catch (JSONException e) {
+            throw new ArgumentException("Missing configurations in config file. Must define \"static_file\", \"dynamic_file\" and \"max_events\".");
         }
     }
 }
