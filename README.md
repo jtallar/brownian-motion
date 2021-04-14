@@ -35,7 +35,9 @@ Run `python3 animator.py dt vm`, where:
    - `vm`: max particle speed module (coloured red), vm > 0
 
 To view the animation, you must open `simu.xyz` with Ovito:
-`./bin/ovito simu.xyz`. Particles will be colored in a scale of colors from cian (static particles) to red (high velocity module), showing how fast each particle is going.
+`./bin/ovito simu.xyz`. 
+
+Particles will be colored in a scale of colors from cian (static particles) to red (high velocity module), showing how fast each particle is going.
 
 ### Column Mapping 
 Configure the file column mapping as follows:

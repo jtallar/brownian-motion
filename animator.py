@@ -28,7 +28,6 @@ max_v_mod = float(sys.argv[2])
 if max_v_mod <= 0:
     print('Max velocity module must be positive!')
     sys.exit(1)
-max_v_mod_sqrt = max_v_mod * max_v_mod
 
 dynamic_file = open("dynamic.txt", "r")
 
@@ -64,8 +63,8 @@ for linenum, line in enumerate(dynamic_file):
         line_vec = line.rstrip().split(' ')
         (x,y,r) = (line_vec[0]+' ', line_vec[1]+' ', particle_radius[p_id]+' ')
         (vx,vy) = (float(line_vec[2]), float(line_vec[3]))
-        v_mod_sq = vx * vx + vy * vy
-        color = ' ' + str(v_mod_sq/max_v_mod_sqrt) + ' ' + str(1.0-v_mod_sq/max_v_mod_sqrt) + ' ' + str(1.0-v_mod_sq/max_v_mod_sqrt)
+        v_mod = (vx * vx + vy * vy) ** 0.5
+        color = ' ' + str(v_mod/max_v_mod) + ' ' + str(1.0-v_mod/max_v_mod) + ' ' + str(1.0-v_mod/max_v_mod)
         ovi_line = r+x+y+str(p_id)+color+'\n'
         ovito_file.write(ovi_line)
         p_id += 1
