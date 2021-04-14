@@ -6,33 +6,39 @@
 ### Versions
 `python 3.8`
 
-## Particle generator
-To generate initial particle positions by creating `static.txt` and `dynamic.txt`. 
-Generates N small particles with random positions and speeds, and 1 stopped big particle at the center. 
-Run `python3 generator.py N L rp mp RP MP vm`, where:
+## Configuration
+Everything is configured by modifying `config.json`. Available configuration keys are:
+   - `static_file`: static file filepath
+   - `dynamic_file`: dynamic file filepath
    - `N`: number of small particles, 100 < N < 150
    - `L`: simulation area side, L > 0
-   - `rp`: small particle radius, rp >= 0
-   - `mp`: small particle mass, mp > 0
-   - `RP`: big particle radius, RP > rp
-   - `MP`: big particle mass, MP > mp
-   - `vm`: max particle speed module, vm > 0
+   - `small_radius`: small particle radius, rp >= 0
+   - `small_mass`: small particle mass, mp > 0
+   - `big_radius`: big particle radius, RP > rp
+   - `big_mass`: big particle mass, MP > mp
+   - `max_v_mod`: initial max particle speed module, vm > 0
+   - `max_events`: maximum amount of events to analyze, maxEvents > 0
+   - `delta_time`: minimum timestep between events, dt >= 0
+
+## Particle generator
+To generate initial particle positions by creating `static_file` and `dynamic_file`. 
+Generates N small particles with random positions and speeds, and 1 stopped big particle at the center. 
+Run `python3 generator.py`, using the following parameters from `config.json`:
+
+   `static_file`, `dynamic_file`, `N`, `L`, `rp`, `mp`, `RP`, `MP`, `vm`
 
 ## Simulation
 To generate executable and run the life simulation
 1. Run `./prepare.sh` in root.
-2. Run `./target/tp3-simu-1.0/brownian-motion.sh -Dstatic=static.txt -Ddynamic=dynamic.txt -DmaxEvents=10000`, where:
-   - `static`: static file filepath
-   - `dynamic`: dynamic file filepath
-   - `maxEvents`: maximum amount of events to analyze, maxEvents > 0
-
-   The example above equals to run `./target/tp3-simu-1.0/brownian-motion.sh`, as those are the default values
+2. Run `./target/tp3-simu-1.0/brownian-motion.sh`, using the following parameters from `config.json`:
+   
+   `static_file`, `dynamic_file`, `max_events`
 
 ## Animation Tool
-Generates `simu.xyz` using information from `static.txt` and `dynamic.txt`.
-Run `python3 animator.py dt vm`, where:
-   - `dt`: minimum timestep between events, dt >= 0
-   - `vm`: max particle speed module (coloured red), vm > 0
+Generates `simu.xyz` using information from `static_file` and `dynamic_file`.
+Run `python3 animator.py dt vm`, using the following parameters from `config.json`:
+
+   `static_file`, `dynamic_file`, `delta_time`, `max_v_mod`
 
 To view the animation, you must open `simu.xyz` with Ovito:
 `./bin/ovito simu.xyz`. 
@@ -48,6 +54,7 @@ Configure the file column mapping as follows:
    - Column 5 - Color - R
    - Column 6 - Color - G
    - Column 7 - Color - B
+
 
 # Analysis Tools
 Analysis can be performed in multiple ways.
