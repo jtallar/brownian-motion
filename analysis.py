@@ -2,6 +2,7 @@ import sys
 import json
 import utils
 import math
+import objects as obj
 
 # 3.0
 # Estudiar distintos comportamientos variando el N
@@ -79,6 +80,10 @@ all_small_v_mod_list = []
 big_position_x_list = []
 big_position_y_list = []
 
+origin_part = obj.Particle(-1, L / 2, L / 2, 0, 0, 0, 0)
+big_z_dist_list = []
+big_z_dist_time_list = []
+
 kinetic_energy = 0
 for linenum, line in enumerate(dynamic_file):
     if restart:
@@ -105,9 +110,9 @@ for linenum, line in enumerate(dynamic_file):
         continue
 
     line_vec = line.rstrip().split(' ')
-    (x,y,r) = (float(line_vec[0]), float(line_vec[1]), particle_radius[p_id])
-    (vx,vy) = (float(line_vec[2]), float(line_vec[3]))
-    v_mod = (vx * vx + vy * vy) ** 0.5
+    # (id, x=0, y=0, vx=0, vy=0, r=0, m=0):
+    part = obj.Particle(p_id, float(line_vec[0]), float(line_vec[1]), float(line_vec[2]), float(line_vec[3]), particle_radius[p_id], particle_mass[p_id])
+    v_mod = part.get_v_mod()
     # Save small particle values
     if p_id != big_particle_index:
         # Save initial v_mod values
@@ -120,15 +125,18 @@ for linenum, line in enumerate(dynamic_file):
             max_small_v_mod = v_mod
     else:
         # Save big particle position
-        big_position_x_list.append(x)
-        big_position_y_list.append(y)
+        big_position_x_list.append(part.x)
+        big_position_y_list.append(part.y)
+        # Every dt, calculate DCM for big particle
+        if time >= target_time:
+            # TODO: Que hago con esto? Aplica la misma duda del dt de animator
+            big_z_dist_list.append(origin_part.center_distance(part))
+            big_z_dist_time_list.append(time)
+            
     # Accumulate kinetic energy only once, is always constant
     if time == 0:
         kinetic_energy += 0.5 * particle_mass[p_id] * v_mod * v_mod
     p_id += 1
-
-    # if time >= target_time:
-    #     ovito_file.write()
 
 # Close files
 dynamic_file.close()

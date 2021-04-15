@@ -40,18 +40,8 @@ class Particle(object):
     def get_point(self):
         return (self.x, self.y)
 
-    # Define distance methods for multidirectional distance in a square
-    def multidir_center_distance(self, other, side):
-        total = 0
-        for i, (a, b) in enumerate(zip(self.get_point(), other.get_point())):
-            delta = abs(b - a)
-            if delta > side - delta:
-                delta = side - delta
-            total += math.pow(delta, 2)
-        return math.sqrt(total)
-
-    def multidir_border_distance(self, other, side):
-        return self.multidir_center_distance(other, side) - self.r - other.r
+    def get_v_mod(self):
+        return (self.vx * self.vx + self.vy * self.vy) ** 0.5
 
     def __str__(self):
         return self.__repr__()
