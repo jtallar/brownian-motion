@@ -39,7 +39,7 @@ class MathTextSciFormatter(mticker.Formatter):
 def init_plotter():
     plt.rcParams.update({'font.size': 20})
 
-def plot_histogram(values, n_bins, x_label, y_label, precision=2, sci=True):
+def plot_histogram_density(values, n_bins, x_label, y_label, precision=2, sci=True):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
     ax.hist(values, bins=n_bins, density=True)  # Plot some data on the axes
     ax.set_xlabel(x_label)
