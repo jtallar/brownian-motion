@@ -76,6 +76,9 @@ max_small_v_mod = 0
 init_small_v_mod_list = []
 all_small_v_mod_list = []
 
+big_position_x_list = []
+big_position_y_list = []
+
 kinetic_energy = 0
 for linenum, line in enumerate(dynamic_file):
     if restart:
@@ -115,6 +118,10 @@ for linenum, line in enumerate(dynamic_file):
         # Save max v_mod
         if v_mod > max_small_v_mod:
             max_small_v_mod = v_mod
+    else:
+        # Save big particle position
+        big_position_x_list.append(x)
+        big_position_y_list.append(y)
     # Accumulate kinetic energy only once, is always constant
     if time == 0:
         kinetic_energy += 0.5 * particle_mass[p_id] * v_mod * v_mod
@@ -142,9 +149,16 @@ print(f'Collision count = {collision_count}\n'
       f'Intercollision avg time = {avg_intercollision_time:.7E}\n'
       f'Constant kinetic energy = {kinetic_energy:.7E}\n')
 
-# Plot histogram density
+# Plotings
 utils.init_plotter()
+# Probability of events per time
 utils.plot_histogram_density(time_list, time_bins, 'Event time', 'Probability of events', 0, False)
+# Initial probability of |v|
 utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
+# Probability of |v| in last third
 utils.plot_histogram_density(all_small_v_mod_list[:len(all_small_v_mod_list)//3], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
+# Big particle trayectory zoomed
+utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False)
+# Big particle trayectory full box size
+utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False, min_val=0, max_val=L)
 utils.hold_execution()

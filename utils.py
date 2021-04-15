@@ -54,15 +54,20 @@ def plot_histogram_density(values, n_bins, x_label, y_label, precision=2, sci=Tr
     plt.tight_layout()
     plt.show(block=False)
 
-def plot_values(x_values, x_label, y_values, y_label, precision=2):
+def plot_values(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
     ax.plot(x_values, y_values)  # Plot some data on the axes
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
-    ax.ticklabel_format(scilimits=(0,0))
+    
+    if min_val is not None and max_val is not None:
+        ax.set_xlim([min_val, max_val])
+        ax.set_ylim([min_val, max_val])
 
-    ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
-    ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+    if sci:
+        ax.ticklabel_format(scilimits=(0,0))
+        ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+        ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
 
     plt.grid()
     plt.tight_layout()
