@@ -12,5 +12,7 @@
 
     "max_events": 10000,
     "delta_time": 0.1,
-    "delta_v_mod": 0.05
+    "delta_v_mod": 0.05,
+
+    "plot": true
 }

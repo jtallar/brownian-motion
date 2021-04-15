@@ -32,6 +32,11 @@ import objects as obj
 def get_delta_bins(delta, max_inclusive):
     return [x * delta for x in range(max_inclusive + 1)]
 
+# Read out filename param if provided
+out_filename = None
+if len(sys.argv) >= 2:
+    out_filename = sys.argv[1]
+
 # Read params from config.json
 with open("config.json") as file:
     config = json.load(file)
@@ -47,6 +52,8 @@ delta_v_mod = utils.read_config_param(
     config, "delta_v_mod", lambda el : float(el), lambda el : el <= 0)
 init_max_v_mod = utils.read_config_param(
     config, "max_v_mod", lambda el : float(el), lambda el : el <= 0)
+plot_boolean = utils.read_config_param(
+    config, "plot", lambda el : bool(el), lambda el : el)
 
 dynamic_file = open(dynamic_filename, "r")
 
@@ -158,15 +165,28 @@ print(f'Collision count = {collision_count}\n'
       f'Constant kinetic energy = {kinetic_energy:.7E}\n')
 
 # Plotings
-utils.init_plotter()
-# Probability of events per time
-utils.plot_histogram_density(time_list, time_bins, 'Event time', 'Probability of events', 0, False)
-# Initial probability of |v|
-utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
-# Probability of |v| in last third
-utils.plot_histogram_density(all_small_v_mod_list[:len(all_small_v_mod_list)//3], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
-# Big particle trayectory zoomed
-utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False)
-# Big particle trayectory full box size
-utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False, min_val=0, max_val=L)
-utils.hold_execution()
+if plot_boolean:
+    utils.init_plotter()
+    # Probability of events per time
+    utils.plot_histogram_density(time_list, time_bins, 'Event time', 'Probability of events', 0, False)
+    # Initial probability of |v|
+    utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
+    # Probability of |v| in last third
+    utils.plot_histogram_density(all_small_v_mod_list[:len(all_small_v_mod_list)//3], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
+    # Big particle trayectory zoomed
+    utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False)
+    # Big particle trayectory full box size
+    utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False, min_val=0, max_val=L)
+    utils.hold_execution()
+
+# If out filename provided, print to file
+if out_filename:
+    with open(out_filename, "w") as file:
+        file.write(
+            f'{N}\n'
+            f'{init_max_v_mod}\n'
+            f'{collision_count}\n'
+            f'{collision_freq}\n'
+            f'{avg_intercollision_time:.7E}\n'
+            f'{kinetic_energy:.7E}\n'
+        )
