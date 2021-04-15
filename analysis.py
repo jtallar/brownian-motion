@@ -68,7 +68,6 @@ target_time = 0.0
 p_id = 0
 # Start collision count in -1 as we have t0, no collision yet
 collision_count = -1
-collision_bin_dic = {}
 time_list = []
 (time, prev_time) = (0, 0)
 sum_intercollision_time = 0
@@ -76,6 +75,8 @@ sum_intercollision_time = 0
 max_small_v_mod = 0
 init_small_v_mod_list = []
 all_small_v_mod_list = []
+
+kinetic_energy = 0
 for linenum, line in enumerate(dynamic_file):
     if restart:
         prev_time = time
@@ -86,12 +87,9 @@ for linenum, line in enumerate(dynamic_file):
         p_id = 0
         collision_count += 1
         if collision_count > 0:
+            # Not first iteration
             sum_intercollision_time += time - prev_time
         time_list.append(time)
-        bin_number = int(time / delta_t)
-        if bin_number not in collision_bin_dic:
-            collision_bin_dic[bin_number] = 0
-        collision_bin_dic[bin_number] += 1
         continue
     if "*" == line.rstrip():
         restart = True
@@ -110,6 +108,9 @@ for linenum, line in enumerate(dynamic_file):
         all_small_v_mod_list.append(v_mod)
         if v_mod > max_small_v_mod:
             max_small_v_mod = v_mod
+    # Accumulate kinetic energy only once, is always constant
+    if time == 0:
+        kinetic_energy += 0.5 * particle_mass[p_id] * v_mod * v_mod
     p_id += 1
 
     # if time >= target_time:
@@ -128,7 +129,8 @@ avg_intercollision_time = sum_intercollision_time / collision_count
 
 print(f'Collision count = {collision_count}\n'
       f'Collision frequency = {collision_freq}\n'
-      f'Intercollision avg time = {avg_intercollision_time:.7E}\n')
+      f'Intercollision avg time = {avg_intercollision_time:.7E}\n'
+      f'Constant kinetic energy = {kinetic_energy:.7E}\n')
 
 utils.init_plotter()
 utils.plot_histogram_density(time_list, time_bins, 'Event time', 'Probability of events', 0, False)
