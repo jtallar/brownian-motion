@@ -74,7 +74,7 @@ public class BrownianMotion {
             System.exit(ERROR_STATUS);
             return;
         } catch (IOException e) {
-            System.err.println("Error dynamic static file");
+            System.err.println("Error reading dynamic file");
             System.exit(ERROR_STATUS);
             return;
         }
@@ -198,6 +198,9 @@ public class BrownianMotion {
 
             particles.add(new Particle(i, x, y, vx, vy, radiusArray[i], massArray[i]));
         }
+
+        // Check that there are no lines remaining
+        if (reader.readLine() != null) throw new IOException();
 
         return particles;
     }
