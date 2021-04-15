@@ -18,7 +18,8 @@ Everything is configured by modifying `config.json`. Available configuration key
    - `big_mass`: big particle mass, MP > mp
    - `max_v_mod`: initial max particle speed module, vm > 0
    - `max_events`: maximum amount of events to analyze, maxEvents > 0
-   - `delta_time`: minimum timestep between events, dt >= 0
+   - `delta_time`: minimum timestep between events, dt > 0
+   - `delta_v_mod`: timestep between speeds in histogram, dv > 0
 
 ## Particle generator
 To generate initial particle positions by creating `static_file` and `dynamic_file`. 

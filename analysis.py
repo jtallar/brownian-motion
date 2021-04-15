@@ -40,7 +40,6 @@ static_filename = utils.read_config_param(
 dynamic_filename = utils.read_config_param(
     config, "dynamic_file", lambda el : el, lambda el : False)
 
-# For analysis, delta_time MUST NOT be 0
 delta_t = utils.read_config_param(
     config, "delta_time", lambda el : float(el), lambda el : el <= 0)
 delta_v_mod = utils.read_config_param(

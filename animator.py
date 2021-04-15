@@ -22,7 +22,7 @@ dynamic_filename = utils.read_config_param(
     config, "dynamic_file", lambda el : el, lambda el : False)
 
 delta_t = utils.read_config_param(
-    config, "delta_time", lambda el : float(el), lambda el : el < 0)
+    config, "delta_time", lambda el : float(el), lambda el : el <= 0)
 max_v_mod = utils.read_config_param(
     config, "max_v_mod", lambda el : float(el), lambda el : el <= 0)
 
