@@ -55,8 +55,11 @@ N = int(static_file.readline())
 L = float(static_file.readline())
 (max_radius, big_particle_index) = (-1.0, -1)
 particle_radius = []
+particle_mass = []
 for index, line in enumerate(static_file):
-    particle_radius.append(float(line.split()[0]))
+    line_vec = line.rstrip().split()
+    particle_radius.append(float(line_vec[0]))
+    particle_mass.append(float(line_vec[1]))
     if particle_radius[index] > max_radius:
         max_radius = particle_radius[index]
         big_particle_index = index
