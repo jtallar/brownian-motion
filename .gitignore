@@ -41,6 +41,7 @@ target/
 simu.xyz
 static.txt
 dynamic.txt
+data_dir/
 
 # Python section
 # Byte-compiled / optimized / DLL files

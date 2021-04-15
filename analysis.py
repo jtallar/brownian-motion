@@ -53,7 +53,7 @@ delta_v_mod = utils.read_config_param(
 init_max_v_mod = utils.read_config_param(
     config, "max_v_mod", lambda el : float(el), lambda el : el <= 0)
 plot_boolean = utils.read_config_param(
-    config, "plot", lambda el : bool(el), lambda el : el)
+    config, "plot", lambda el : bool(el), lambda el : False)
 
 dynamic_file = open(dynamic_filename, "r")
 
