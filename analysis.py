@@ -83,12 +83,15 @@ for linenum, line in enumerate(dynamic_file):
         time = float(line.rstrip())
         # if time >= target_time:
         #     write_corners(ovito_file, N, L)
+        # Reset variables
         restart = False
         p_id = 0
+        # Add a collision
         collision_count += 1
+        # If there already were any collisions, acum intercollision time
         if collision_count > 0:
-            # Not first iteration
             sum_intercollision_time += time - prev_time
+        # Add time to list
         time_list.append(time)
         continue
     if "*" == line.rstrip():
@@ -102,10 +105,14 @@ for linenum, line in enumerate(dynamic_file):
     (x,y,r) = (float(line_vec[0]), float(line_vec[1]), particle_radius[p_id])
     (vx,vy) = (float(line_vec[2]), float(line_vec[3]))
     v_mod = (vx * vx + vy * vy) ** 0.5
+    # Save small particle values
     if p_id != big_particle_index:
+        # Save initial v_mod values
         if time == 0:
             init_small_v_mod_list.append(v_mod)
+        # Save all v_mod values
         all_small_v_mod_list.append(v_mod)
+        # Save max v_mod
         if v_mod > max_small_v_mod:
             max_small_v_mod = v_mod
     # Accumulate kinetic energy only once, is always constant
@@ -120,11 +127,14 @@ for linenum, line in enumerate(dynamic_file):
 dynamic_file.close()
 static_file.close()
 
-# time is last time recorded
+# Calculate collision frequency. time is last time recorded
 collision_freq = collision_count / time
+# Get time bins. Eg: [0.0, dt, 2*dt, ...]
 time_bins = get_delta_bins(delta_t, math.ceil(time / delta_t))
+# Get velocity bins. Eg: [0.0, dv, 2*dv, ...]
 v_mod_bins = get_delta_bins(delta_v_mod, math.ceil(max_small_v_mod / delta_v_mod))
 # TODO: Check que se refieran a esto con promedio de tiempos de colision
+# Calculate average intercollision time
 avg_intercollision_time = sum_intercollision_time / collision_count
 
 print(f'Collision count = {collision_count}\n'
@@ -132,6 +142,7 @@ print(f'Collision count = {collision_count}\n'
       f'Intercollision avg time = {avg_intercollision_time:.7E}\n'
       f'Constant kinetic energy = {kinetic_energy:.7E}\n')
 
+# Plot histogram density
 utils.init_plotter()
 utils.plot_histogram_density(time_list, time_bins, 'Event time', 'Probability of events', 0, False)
 utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
