@@ -4,6 +4,7 @@ import utils
 
 # 3.0
 # Estudiar distintos comportamientos variando el N
+# TODO: Tomamos #Eventos = f(N)? Trayectorias?
 
 # 3.1
 # Frecuencia de colisiones --> Nro de colisiones por unidad de tiempo
@@ -59,14 +60,19 @@ p_id = 0
 collision_count = -1
 collision_bin_dic = {}
 time_list = []
+(time, prev_time) = (0, 0)
+sum_intercollision_time = 0
 for linenum, line in enumerate(dynamic_file):
     if restart:
+        prev_time = time
         time = float(line.rstrip())
         # if time >= target_time:
         #     write_corners(ovito_file, N, L)
         restart = False
         p_id = 0
         collision_count += 1
+        if collision_count > 0:
+            sum_intercollision_time += time - prev_time
         time_list.append(time)
         bin_number = int(time / delta_t)
         if bin_number not in collision_bin_dic:
@@ -94,10 +100,12 @@ static_file.close()
 # time is last time recorded
 collision_freq = collision_count / time
 bin_count = int(time / delta_t) + 1
+# TODO: Check que se refieran a esto con promedio de tiempos de colision
+avg_intercollision_time = sum_intercollision_time / collision_count
 
-print(collision_bin_dic)
 print(f'Collision count = {collision_count}\n'
-      f'Collision frequency = {collision_freq}')
+      f'Collision frequency = {collision_freq}\n'
+      f'Intercollision avg time = {avg_intercollision_time:.7E}\n')
 
 utils.init_plotter()
 utils.plot_histogram(time_list, bin_count, 'Event time', 'Probability of events', 0, False)
