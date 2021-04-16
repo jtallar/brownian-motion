@@ -53,7 +53,9 @@ for linenum, line in enumerate(dynamic_file):
         restart = True
         if time >= target_time:
             target_time += delta_t
-        # TODO: Ver que hago si en un dt no hay eventos. Esto pasa si aca time >= target_time
+            if time >= target_time:
+                print('Delta t is too small, there were no events in a gap! Exiting...')
+                sys.exit(1)
         continue
 
     if time >= target_time:

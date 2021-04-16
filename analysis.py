@@ -114,6 +114,9 @@ for linenum, line in enumerate(dynamic_file):
         # Take 1 event AFTER delta t
         if time >= target_time:
             target_time += delta_t
+            if time >= target_time:
+                print('Delta t is too small, there were no events in a gap! Exiting...')
+                sys.exit(1)
         continue
 
     line_vec = line.rstrip().split(' ')
@@ -136,7 +139,6 @@ for linenum, line in enumerate(dynamic_file):
         big_position_y_list.append(part.y)
         # Every dt, calculate DCM for big particle
         if time >= target_time:
-            # TODO: Que hago con esto? Aplica la misma duda del dt de animator
             big_z_dist_list.append(origin_part.center_distance(part))
             big_z_dist_time_list.append(time)
             
