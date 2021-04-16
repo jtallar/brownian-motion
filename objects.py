@@ -43,6 +43,10 @@ class Particle(object):
     def get_v_mod(self):
         return (self.vx * self.vx + self.vy * self.vy) ** 0.5
 
+    def collides_with_wall(self, side):
+        # 5.8000000E+00 --> Check if it counts all digits
+        return (self.x + self.r) >= side or (self.y + self.r) >= side or (self.x - self.r) <= 0.0 or (self.y - self.r) <= 0.0
+
     def __str__(self):
         return self.__repr__()
 

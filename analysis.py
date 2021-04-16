@@ -54,6 +54,10 @@ delta_v_mod = utils.read_config_param(
     config, "delta_v_mod", lambda el : float(el), lambda el : el <= 0)
 init_max_v_mod = utils.read_config_param(
     config, "max_v_mod", lambda el : float(el), lambda el : el <= 0)
+small_dcm_rad = utils.read_config_param(
+    config, "small_dcm_radius", lambda el : float(el), lambda el : el < 0)
+small_dcm_count = utils.read_config_param(
+    config, "small_dcm_count", lambda el : int(el), lambda el : el <= 0)
 plot_boolean = utils.read_config_param(
     config, "plot", lambda el : bool(el), lambda el : False)
 
@@ -91,8 +95,15 @@ big_position_x_list = []
 big_position_y_list = []
 
 origin_part = obj.Particle(-1, L / 2, L / 2, 0, 0, 0, 0)
+particle_origin_list = []
 big_z_dist_list = []
 big_z_dist_time_list = []
+
+small_dcm_ids_set = set()
+small_z_dist_sq_sum = 0
+small_dcm_list = []
+small_dcm_time_list = []
+small_dcm_stop = False
 
 kinetic_energy = 0
 for linenum, line in enumerate(dynamic_file):
@@ -120,6 +131,13 @@ for linenum, line in enumerate(dynamic_file):
         restart = True
         # Take 1 event AFTER delta t
         if time >= target_time:
+            if not small_dcm_stop:
+                # Calculate small particle DCM
+                small_dcm_list.append(small_z_dist_sq_sum / len(small_dcm_ids_set))
+                small_dcm_time_list.append(time)
+                small_z_dist_sq_sum = 0
+
+            # Update target_time
             target_time += delta_t
             if time >= target_time:
                 print('Delta t is too small, there were no events in a gap! Exiting...')
@@ -144,19 +162,39 @@ for linenum, line in enumerate(dynamic_file):
         # Save big particle position
         big_position_x_list.append(part.x)
         big_position_y_list.append(part.y)
-        # Every dt, calculate DCM for big particle
-        if time >= target_time:
-            big_z_dist_list.append(origin_part.center_distance(part))
-            big_z_dist_time_list.append(time)
             
-    # Accumulate kinetic energy only once, is always constant
+    # Perform only for initial positions
     if time == 0:
+        # Accumulate kinetic energy only once, is always constant
         kinetic_energy += 0.5 * particle_mass[p_id] * v_mod * v_mod
+        # Save particle positions
+        particle_origin_list.append(part)
+        # Save small particle ids for dcm if particle near center
+        if p_id != big_particle_index and origin_part.center_distance(part) < small_dcm_rad and len(small_dcm_ids_set) < small_dcm_count:
+            small_dcm_ids_set.add(p_id)
+
+    # Check if particle in DCM and wall collision
+    if p_id in small_dcm_ids_set and not small_dcm_stop and part.collides_with_wall(L):
+        small_dcm_stop = True
+
+    # Every dt, calculate DCM
+    if time >= target_time:
+        if p_id == big_particle_index:
+            # Save z dist for big particle
+            big_z_dist_list.append(particle_origin_list[p_id].center_distance(part))
+            big_z_dist_time_list.append(time)
+        elif not small_dcm_stop and p_id in small_dcm_ids_set:
+            # Accum (z dist) ^ 2 for smaller particles
+            small_z_dist_sq_sum += particle_origin_list[p_id].center_distance(part) ** 2
+
     p_id += 1
 
 # Close files
 dynamic_file.close()
 static_file.close()
+
+# Initialize plotting
+utils.init_plotter()
 
 # Calculate collision frequency. time is last time recorded
 collision_freq = collision_count / time
@@ -166,6 +204,14 @@ intercollision_time_bins = get_delta_bins(delta_t_intercol, 0, math.ceil(max_int
 v_mod_bins = get_delta_bins(delta_v_mod, 0, math.ceil(max_small_v_mod / delta_v_mod))
 # Calculate average intercollision time
 avg_intercollision_time = sum_intercollision_time / collision_count
+# Calculate small particles DCM
+if len(small_dcm_ids_set) == small_dcm_count:
+    # Plot small DCM to get m from linear regression
+    coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, False)
+    small_dcm_D = coef[0] / 2
+    print(f'Small DCM D = {small_dcm_D}')    
+else:
+    print('Did not reach desired small_dcm_count, skipping DCM calculation...')
 
 print(f'Collision count = {collision_count}\n'
       f'Collision frequency = {collision_freq}\n'
@@ -174,7 +220,8 @@ print(f'Collision count = {collision_count}\n'
 
 # Plotings
 if plot_boolean:
-    utils.init_plotter()
+    # Small particles DCM was plotted before, will be showed when holding execution
+    # utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, False)
     # Probability of intercollision time
     utils.plot_histogram_density(intercollision_time_list, intercollision_time_bins, 'Time between collision (s)', 'Probability of time', 1, True)
     # Initial probability of |v|

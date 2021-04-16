@@ -55,6 +55,29 @@ def plot_histogram_density(values, n_bins, x_label, y_label, precision=2, sci=Tr
     plt.tight_layout()
     plt.show(block=False)
 
+def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None):
+    fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
+    adj_coef = np.polyfit(x_values, y_values, 1)
+    poly1d_fn = np.poly1d(adj_coef)
+    ax.plot(x_values, y_values, 'yo', x_values, poly1d_fn(x_values), '-k')  # Plot some data on the axes
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    
+    if min_val is not None and max_val is not None:
+        ax.set_xlim([min_val, max_val])
+        ax.set_ylim([min_val, max_val])
+
+    if sci:
+        ax.ticklabel_format(scilimits=(0,0))
+        ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+        ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+
+    plt.grid()
+    plt.tight_layout()
+    plt.show(block=False)
+
+    return adj_coef
+
 def plot_values(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
     ax.plot(x_values, y_values)  # Plot some data on the axes

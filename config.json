@@ -16,5 +16,8 @@
     "delta_time_intercollition": 1e-4,
     "delta_v_mod": 0.1,
 
+    "small_dcm_radius": 1.2,
+    "small_dcm_count": 10,
+
     "plot": true
 }
