@@ -29,8 +29,8 @@ import objects as obj
 # Para estas cosas, solo tomar hasta que la particula colisiona con la pared, 
 # tanto para grandes como para chicas. Tomar solo la segunda mitad de sus trayectorias
 
-def get_delta_bins(delta, max_inclusive):
-    return [x * delta for x in range(max_inclusive + 1)]
+def get_delta_bins(delta, start, max_mult_inclusive):
+    return [x * delta for x in range(start, max_mult_inclusive + 1)]
 
 # Read out filename param if provided
 out_filename = None
@@ -48,6 +48,8 @@ dynamic_filename = utils.read_config_param(
 
 delta_t = utils.read_config_param(
     config, "delta_time_analysis", lambda el : float(el), lambda el : el <= 0)
+delta_t_intercol = utils.read_config_param(
+    config, "delta_time_intercollition", lambda el : float(el), lambda el : el <= 0)
 delta_v_mod = utils.read_config_param(
     config, "delta_v_mod", lambda el : float(el), lambda el : el <= 0)
 init_max_v_mod = utils.read_config_param(
@@ -76,9 +78,10 @@ target_time = 0.0
 p_id = 0
 # Start collision count in -1 as we have t0, no collision yet
 collision_count = -1
-time_list = []
 (time, prev_time) = (0, 0)
 sum_intercollision_time = 0
+intercollision_time_list = []
+max_intercollision_time = 0
 
 max_small_v_mod = 0
 init_small_v_mod_list = []
@@ -105,9 +108,13 @@ for linenum, line in enumerate(dynamic_file):
         collision_count += 1
         # If there already were any collisions, acum intercollision time
         if collision_count > 0:
-            sum_intercollision_time += time - prev_time
-        # Add time to list
-        time_list.append(time)
+            intercollision_time = time - prev_time
+            sum_intercollision_time += intercollision_time
+            # Add intercollision time to list
+            intercollision_time_list.append(intercollision_time)
+            # Save max intercollision time
+            if intercollision_time > max_intercollision_time:
+                max_intercollision_time = intercollision_time
         continue
     if "*" == line.rstrip():
         restart = True
@@ -153,11 +160,10 @@ static_file.close()
 
 # Calculate collision frequency. time is last time recorded
 collision_freq = collision_count / time
-# Get time bins. Eg: [0.0, dt, 2*dt, ...]
-time_bins = get_delta_bins(delta_t, math.ceil(time / delta_t))
+# Get time bins. Eg: [0.0, dit, 2*dit, ...]
+intercollision_time_bins = get_delta_bins(delta_t_intercol, 0, math.ceil(max_intercollision_time / delta_t_intercol))
 # Get velocity bins. Eg: [0.0, dv, 2*dv, ...]
-v_mod_bins = get_delta_bins(delta_v_mod, math.ceil(max_small_v_mod / delta_v_mod))
-# TODO: Check que se refieran a esto con promedio de tiempos de colision
+v_mod_bins = get_delta_bins(delta_v_mod, 0, math.ceil(max_small_v_mod / delta_v_mod))
 # Calculate average intercollision time
 avg_intercollision_time = sum_intercollision_time / collision_count
 
@@ -169,8 +175,8 @@ print(f'Collision count = {collision_count}\n'
 # Plotings
 if plot_boolean:
     utils.init_plotter()
-    # Probability of events per time
-    utils.plot_histogram_density(time_list, time_bins, 'Event time', 'Probability of events', 0, False)
+    # Probability of intercollision time
+    utils.plot_histogram_density(intercollision_time_list, intercollision_time_bins, 'Time between collision (s)', 'Probability of time', 1, True)
     # Initial probability of |v|
     utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
     # Probability of |v| in last third
