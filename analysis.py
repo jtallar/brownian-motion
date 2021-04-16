@@ -180,7 +180,7 @@ if plot_boolean:
     # Initial probability of |v|
     utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
     # Probability of |v| in last third
-    utils.plot_histogram_density(all_small_v_mod_list[:len(all_small_v_mod_list)//3], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
+    utils.plot_histogram_density(all_small_v_mod_list[2*len(all_small_v_mod_list)//3:], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
     # Big particle trayectory zoomed
     utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False)
     # Big particle trayectory full box size
