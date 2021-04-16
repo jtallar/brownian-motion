@@ -28,6 +28,9 @@ max_v_mod = utils.read_config_param(
     config, "max_v_mod", lambda el : float(el), lambda el : el <= 0)
 
 particles = gen.particles(N, L, max_v_mod, small_rad, small_mass, big_rad, big_mass)
+while len(particles) != N + 1:
+    print(f'Could only fit {len(particles)} particles, trying again...')
+    particles = gen.particles(N, L, max_v_mod, small_rad, small_mass, big_rad, big_mass)
 
 gen.data_files(L, particles, static_filename, dynamic_filename)
 print(f'Generated files {static_filename} and {dynamic_filename}')

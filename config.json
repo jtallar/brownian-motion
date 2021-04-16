@@ -2,7 +2,7 @@
     "static_file": "static.txt",
     "dynamic_file": "dynamic.txt",
 
-    "N": 149,
+    "N": 135,
     "L": 6,
     "small_radius": 0.2,
     "small_mass": 0.9,
