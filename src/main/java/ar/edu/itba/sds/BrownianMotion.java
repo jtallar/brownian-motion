@@ -120,6 +120,15 @@ public class BrownianMotion {
         endTime = System.currentTimeMillis();
         System.out.printf("Simulation time \t\t ⏱  %g seconds\n", (endTime - startTime) / 1000.0);
 
+        // Add trailing *
+        try {
+            appendToFile(dynamicFilename, "\n*");
+        } catch (IOException e) {
+            System.err.println("Error writing dynamic file");
+            System.exit(ERROR_STATUS);
+            return;
+        }
+
         if (eventsTriggered == maxEvents)
             System.out.printf("Reached %d events, exiting...\n", maxEvents);
         else
@@ -153,8 +162,12 @@ public class BrownianMotion {
         sb.append(String.format("\n*\n%.7E", time));
         particles.forEach(p -> sb.append(String.format("\n%.7E %.7E %.7E %.7E", p.getX(), p.getY(), p.getVx(), p.getVy())));
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(dynamicFilename, true))) {
-            writer.write(sb.toString());
+        appendToFile(dynamicFilename, sb.toString());
+    }
+
+    private static void appendToFile(String filename, String s) throws IOException {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write(s);
         }
     }
 
