@@ -1,7 +1,7 @@
 {
-	"static_file": "static.txt",
+    "static_file": "static.txt",
     "dynamic_file": "dynamic.txt",
-    
+
     "N": 149,
     "L": 6,
     "small_radius": 0.2,
