@@ -56,6 +56,7 @@ Configure the file column mapping as follows:
    - Column 6 - Color - G
    - Column 7 - Color - B
 
+#TODO: Add explanation for traling line
 
 # Analysis Tools
 Analysis can be performed in multiple ways.

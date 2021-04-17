@@ -37,7 +37,6 @@ for line in static_file:
 
 ovito_file = open("simu.xyz", "w")
 
-# TODO: Mostramos el vector velocidad en la animacion?
 restart = True
 target_time = 0
 p_id = 0
