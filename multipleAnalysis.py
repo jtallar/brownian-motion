@@ -106,7 +106,9 @@ else:
             big_dcm_time_list = x.big_dcm_time_list
             print("Plotting Big DCM for |v| = 2.0")
             break
-    utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, sci=False, plot=True)
+    coef = utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, sci=False, plot=True)
+    big_dcm_D = coef[0] / 2
+    print(f'Big DCM D = {big_dcm_D}')
     # Calculate big_dcm_d
     big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False)[0] / 2 for x in sum_values]
     utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, sci_y=True)
