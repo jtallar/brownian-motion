@@ -17,7 +17,7 @@ sed -i -e 's/\"plot\": true/\"plot\": false/g' config.json
 # Set max_v_mod to 2.0
 sed -i -e 's/\"max_v_mod\": [0-9]\+.[0-9]\+,/\"max_v_mod\": 2.0,/g' config.json
 N="$1"
-while [ "$N" -lt 150 ]
+while [ "$N" -le 136 ]
 do
     SIM_DIR="$ROOT_DIR/$N"
     if [ -d "$SIM_DIR" ]; then
