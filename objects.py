@@ -124,7 +124,7 @@ class FullValue(object):
 class Summary(object):
     def __init__(self, metric_list, param, big_dcm=True):
         self.param = param
-        coliision_count_list = []
+        collision_count_list = []
         collision_freq_list = []
         avg_intercollision_time_list = []
         small_dcm_D_list = []
@@ -141,7 +141,7 @@ class Summary(object):
             self.big_position_y_list = metric.big_position_y_list
             
             # Save all params to create Full Values later
-            coliision_count_list.append(metric.collision_count)
+            collision_count_list.append(metric.collision_count)
             collision_freq_list.append(metric.collision_freq)
             avg_intercollision_time_list.append(metric.avg_intercollision_time)
             small_dcm_D_list.append(metric.small_dcm_D)
@@ -151,7 +151,7 @@ class Summary(object):
             big_z_dist_time_superlist.append(metric.big_z_dist_time_list)
 
         # Create Full values for lists
-        self.coliision_count = FullValue(sts.mean(coliision_count_list), sts.stdev(coliision_count_list))
+        self.collision_count = FullValue(sts.mean(collision_count_list), sts.stdev(collision_count_list))
         self.collision_freq = FullValue(sts.mean(collision_freq_list), sts.stdev(collision_freq_list))
         self.avg_intercollision_time = FullValue(sts.mean(avg_intercollision_time_list), sts.stdev(avg_intercollision_time_list))
         self.small_dcm_D = FullValue(sts.mean(small_dcm_D_list), sts.stdev(small_dcm_D_list))
