@@ -86,6 +86,30 @@ class ParticleNode(object):
     def __repr__(self):
         return "Node{%s, next=%s}" % (self.particle, self.next)
 
+class IdDistance(object):
+    def __init__(self, id, dist):
+        self.id = id
+        self.dist = dist
+    
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return "IdDistance{%s, %s}" % (self.id, self.dist)
+    
+    # Define hash and eq methods to allow key usage
+    def __hash__(self):
+        return hash(self.id)
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not (self == other)
+    
+    def __lt__(self, other):
+        return self.dist < other.dist
+
 class Metrics(object):
     def __init__(self, N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list):
         self.N = N

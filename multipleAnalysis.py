@@ -41,8 +41,6 @@ delta_t_intercol = utils.read_config_param(
     config, "delta_time_intercollition", lambda el : float(el), lambda el : el <= 0)
 delta_v_mod = utils.read_config_param(
     config, "delta_v_mod", lambda el : float(el), lambda el : el <= 0)
-small_dcm_rad = utils.read_config_param(
-    config, "small_dcm_radius", lambda el : float(el), lambda el : el < 0)
 small_dcm_count = utils.read_config_param(
     config, "small_dcm_count", lambda el : int(el), lambda el : el <= 0)
 
@@ -57,7 +55,7 @@ for directory in root_entries:
     for filename in entries:
         if filename == 'static.txt': continue
         dynamic_filename = directory + '/' + filename
-        obs_dict[init_param].append(anl.analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, small_dcm_rad, small_dcm_count, False))
+        obs_dict[init_param].append(anl.analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, small_dcm_count, False))
 
 # Get summarized values list
 keys = list(obs_dict.keys())

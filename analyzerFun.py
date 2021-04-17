@@ -7,7 +7,7 @@ import objects as obj
 def get_delta_bins(delta, start, max_mult_inclusive):
     return [x * delta for x in range(start, max_mult_inclusive + 1)]
 
-def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, small_dcm_rad, small_dcm_count, plot_boolean):
+def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, small_dcm_count, plot_boolean):
     dynamic_file = open(dynamic_filename, "r")
 
     static_file = open(static_filename, "r")
@@ -46,6 +46,7 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
     big_z_dist_list = []
     big_z_dist_time_list = []
 
+    small_id_dist_set = set()
     small_dcm_ids_set = set()
     small_z_dist_sq_sum = 0
     small_dcm_list = []
@@ -76,6 +77,11 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
             continue
         if "*" == line.rstrip():
             restart = True
+
+            if time == 0:
+                closest_small_ids = sorted(small_id_dist_set)[:small_dcm_count]
+                small_dcm_ids_set = set([x.id for x in closest_small_ids])
+                
             # Take 1 event AFTER delta t
             if time >= target_time:
                 if not small_dcm_stop:
@@ -117,9 +123,8 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
             # Save particle positions
             particle_origin_list.append(part)
             # Save small particle ids for dcm if particle near center
-            # TODO: Save them ordered by center distance, take first small_dcm_count
-            if p_id != big_particle_index and origin_part.center_distance(part) < small_dcm_rad and len(small_dcm_ids_set) < small_dcm_count:
-                small_dcm_ids_set.add(p_id)
+            if p_id != big_particle_index:
+                small_id_dist_set.add(obj.IdDistance(p_id, origin_part.center_distance(part)))
 
         # Check if particle in DCM and wall collision
         if p_id in small_dcm_ids_set and not small_dcm_stop and part.collides_with_wall(L):
