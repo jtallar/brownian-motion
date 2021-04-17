@@ -1,6 +1,6 @@
 {
-    "static_file": "static.txt",
-    "dynamic_file": "dynamic.txt",
+    "static_file": "data_dir/2.0/static.txt",
+    "dynamic_file": "data_dir/2.0/dynamic2.txt",
 
     "N": 136,
     "L": 6,
@@ -19,5 +19,5 @@
     "small_dcm_radius": 1.2,
     "small_dcm_count": 10,
 
-    "plot": true
+    "plot": false
 }

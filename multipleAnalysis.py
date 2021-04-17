@@ -51,7 +51,7 @@ root_entries = os.listdir(root_directory)
 for directory in root_entries:
     directory = root_directory + '/' + directory
     entries = os.listdir(directory)
-    init_param = int(directory.split('/')[-1])
+    init_param = float(directory.split('/')[-1])
     static_filename = directory + '/static.txt'
     obs_dict[init_param] = []
     for filename in entries:
@@ -76,7 +76,7 @@ if mode == 'N':
     save_name = save_dir + '/trayectories_N.png' if save_dir else None
     colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L, save_name=save_name)
     for i, col in enumerate(colors):
-        utils.print_with_color("N = " + str(N_values[i]) + ", color = " + col, col)
+        utils.print_with_color(f"N = {N_values[i]}, color = {col}", col)
     # Plot collision_count = f(N)
     save_name = save_dir + '/collision_count.png' if save_dir else None
     utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_count', 'Collision count', 1, sci=False, save_name=save_name)
@@ -95,14 +95,19 @@ else:
     save_name = save_dir + '/trayectories_K.png' if save_dir else None
     colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L, save_name=save_name)
     for i, col in enumerate(colors):
-        utils.print_with_color("K = " + str(K_values[i]) + ", color = " + col, col)    
+        utils.print_with_color(f"K = {K_values[i]:.7E}, color = {col}", col)
     # Plot small_dcm_d = f(T)
     save_name = save_dir + '/small_dcm_D.png' if save_dir else None
     utils.plot_error_bars_summary(keys, 'Max initial |v|', sum_values, 'small_dcm_D', 'Small particles D', 1, sci=True, save_name=save_name)
-    # Plot big_dcm when Max initial |v| = 2.0
-    [x * x for x in range(10) if x % 2 == 0]
-    big_dcm_time_list = [x.big_dcm_time_list for x in sum_values if x.param == 2.0]
-    big_dcm_list = [x.big_dcm_list for x in sum_values if x.param == 2.0]
+    # Plot big_dcm when Max initial |v| = 2.0 if found (if not, take last one)
+    big_dcm_list = sum_values[-1].big_dcm_list
+    big_dcm_time_list = sum_values[-1].big_dcm_time_list
+    for x in sum_values:
+        if x.param == 2.0:
+            big_dcm_list = x.big_dcm_list
+            big_dcm_time_list = x.big_dcm_time_list
+            print("Plotting Big DCM for |v| = 2.0")
+            break
     utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, False, plot=True)
     # Calculate big_dcm_d
     big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False)[0] / 2 for x in sum_values]
