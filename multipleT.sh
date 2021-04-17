@@ -45,6 +45,9 @@ do
     MAX_V_MOD=$(echo "$MAX_V_MOD + $2" | bc -l)
 done
 
+# Reenable plotting
+sed -i -e 's/\"plot\": false/\"plot\": true/g' config.json
+
 PICS_DIR="pics_T"
 OUT_FILE="out_T.txt"
 python3.8 multipleAnalysis.py "$ROOT_DIR" 'T'

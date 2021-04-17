@@ -45,6 +45,9 @@ do
     ((N = N + "$2"))
 done
 
+# Reenable plotting
+sed -i -e 's/\"plot\": false/\"plot\": true/g' config.json
+
 PICS_DIR="pics_N"
 OUT_FILE="out_N.txt"
 python3.8 multipleAnalysis.py "$ROOT_DIR" 'N'

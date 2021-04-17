@@ -12,11 +12,11 @@
 
     "max_events": 100000,
     "delta_time_animation": 0.04,
-    "delta_time_analysis": 0.1,
+    "delta_time_analysis": 0.05,
     "delta_time_intercollition": 1e-4,
     "delta_v_mod": 0.1,
 
-    "small_dcm_count": 10,
+    "small_dcm_count": 20,
 
-    "plot": false
+    "plot": true
 }
