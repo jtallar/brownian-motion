@@ -62,7 +62,7 @@ for directory in root_entries:
 # Get summarized values list
 keys = list(obs_dict.keys())
 keys.sort()
-sum_values = [obj.Summary(obs_list, param) for param, obs_list in obs_dict.items()]
+sum_values = [obj.Summary(obs_list, param, mode == 'T') for param, obs_list in obs_dict.items()]
 sum_values.sort(key=lambda x: x.param)
 L = sum_values[0].L
 
@@ -73,7 +73,7 @@ if mode == 'N':
     N_values = [x.N for x in sum_values]
     trayectories_x = [x.big_position_x_list for x in sum_values]
     trayectories_y = [x.big_position_y_list for x in sum_values]
-    save_name = save_dir + '/trayectories.png' if save_dir else None
+    save_name = save_dir + '/trayectories_N.png' if save_dir else None
     colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L, save_name=save_name)
     for i, col in enumerate(colors):
         utils.print_with_color("N = " + str(N_values[i]) + ", color = " + col, col)
@@ -88,14 +88,25 @@ if mode == 'N':
     utils.plot_error_bars_summary(keys, 'N', sum_values, 'avg_intercollision_time', 'Average intercollision time', 1, sci=True, save_name=save_name)
 
 else:
-    print("Not done yet")
     # Plot multiple trayectories for different K
-
+    K_values = [x.last_kinetic_energy for x in sum_values]
+    trayectories_x = [x.big_position_x_list for x in sum_values]
+    trayectories_y = [x.big_position_y_list for x in sum_values]
+    save_name = save_dir + '/trayectories_K.png' if save_dir else None
+    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L, save_name=save_name)
+    for i, col in enumerate(colors):
+        utils.print_with_color("K = " + str(K_values[i]) + ", color = " + col, col)    
     # Plot small_dcm_d = f(T)
-
-    # Plot big_dcm
-
+    save_name = save_dir + '/small_dcm_D.png' if save_dir else None
+    utils.plot_error_bars_summary(keys, 'Max initial |v|', sum_values, 'small_dcm_D', 'Small particles D', 1, sci=True, save_name=save_name)
+    # Plot big_dcm when Max initial |v| = 2.0
+    [x * x for x in range(10) if x % 2 == 0]
+    big_dcm_time_list = [x.big_dcm_time_list for x in sum_values if x.param == 2.0]
+    big_dcm_list = [x.big_dcm_list for x in sum_values if x.param == 2.0]
+    utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, False, plot=True)
     # Calculate big_dcm_d
+    big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False)[0] / 2 for x in sum_values]
+    utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, False)
 
 if save_dir:
     print(f'Saved plots in {save_dir}/')
