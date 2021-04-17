@@ -23,17 +23,28 @@ do
         rm -rf "$SIM_DIR"
     fi
     mkdir "$SIM_DIR"
+    # Replace N with current value
+    SED_REP="s/\"N\": [0-9]\+,/\"N\": $N,/g"
+    sed -i -e "$SED_REP" config.json
+    # Replace static filename
+    SED_DYN="s/\"static_file\": .*,/\"static_file\": \"$ROOT_DIR\/$N\/static.txt\",/g"
+    sed -i -e "$SED_DYN" config.json
     echo "Running $3 times with N=$N..."
     for i in $(seq 1 $3)
     do
-        OUT_FILE="$SIM_DIR/data$i"
-        # Replace N with current value
-        SED_REP="s/\"N\": [0-9]\+,/\"N\": $N,/g"
-        sed -i -e "$SED_REP" config.json
+        # Replace dynamic filename
+        SED_DYN="s/\"dynamic_file\": .*,/\"dynamic_file\": \"$ROOT_DIR\/$N\/dynamic$i.txt\",/g"
+        sed -i -e "$SED_DYN" config.json
+        # OUT_FILE="$SIM_DIR/data$i"
         python3.8 generator.py
         ./target/tp3-simu-1.0/brownian-motion.sh
-        python3.8 analysis.py "$OUT_FILE"
     done
     echo "-----------------------------------"
     ((N = N + "$2"))
 done
+
+PICS_DIR="pics_N"
+OUT_FILE="out_N.txt"
+python3.8 multipleAnalysis.py "$ROOT_DIR" "$PICS_DIR"
+# python3.8 multipleAnalysis.py "$ROOT_DIR" "$PICS_DIR" > "$OUT_FILE"
+# mv "$OUT_FILE" "$PICS_DIR"
