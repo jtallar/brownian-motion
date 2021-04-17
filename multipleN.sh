@@ -45,6 +45,6 @@ done
 
 PICS_DIR="pics_N"
 OUT_FILE="out_N.txt"
-python3.8 multipleAnalysis.py "$ROOT_DIR" "$PICS_DIR"
-# python3.8 multipleAnalysis.py "$ROOT_DIR" "$PICS_DIR" > "$OUT_FILE"
+python3.8 multipleAnalysis.py "$ROOT_DIR" 'N'
+# python3.8 multipleAnalysis.py "$ROOT_DIR" 'N' "$PICS_DIR" > "$OUT_FILE"
 # mv "$OUT_FILE" "$PICS_DIR"
