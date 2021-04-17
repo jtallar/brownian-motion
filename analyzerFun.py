@@ -117,6 +117,7 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
             # Save particle positions
             particle_origin_list.append(part)
             # Save small particle ids for dcm if particle near center
+            # TODO: Save them ordered by center distance, take first small_dcm_count
             if p_id != big_particle_index and origin_part.center_distance(part) < small_dcm_rad and len(small_dcm_ids_set) < small_dcm_count:
                 small_dcm_ids_set.add(p_id)
 
