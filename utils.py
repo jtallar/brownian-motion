@@ -14,6 +14,14 @@ def read_config_param(config, param_name, converter_fun, invalid_fun):
             return param
     invalid_param(param_name)
 
+RESET = '\033[0m'
+def get_color_escape(color_hex, background=False):
+    rgb = [int(color_hex[i:i+2], 16) for i in range(1, len(color_hex), 2)]
+    return '\033[{};2;{};{};{}m'.format(48 if background else 38, rgb[0], rgb[1], rgb[2])
+
+def print_with_color(string, color_hex):
+    print(get_color_escape(color_hex) + string + RESET)
+
 # Formatter taken from 
 # https://stackoverflow.com/questions/25750170/show-decimal-places-and-scientific-notation-on-the-axis-of-a-matplotlib-plot
 class MathTextSciFormatter(mticker.Formatter):
@@ -80,6 +88,32 @@ def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, s
     plt.show(block=False)
 
     return adj_coef
+
+def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_label, precision=2, sci=True, min_val=None, max_val=None):
+    fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
+
+    colors = []
+    for i in range(len(x_values_superlist)):
+        p = ax.plot(x_values_superlist[i], y_values_superlist[i])  # Plot some data on the axes
+        colors.append(p[-1].get_color())
+        
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    
+    if min_val is not None and max_val is not None:
+        ax.set_xlim([min_val, max_val])
+        ax.set_ylim([min_val, max_val])
+
+    if sci:
+        ax.ticklabel_format(scilimits=(0,0))
+        ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+        ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+
+    plt.grid()
+    plt.tight_layout()
+    plt.show(block=False)
+
+    return colors
 
 def plot_values(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.

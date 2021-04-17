@@ -64,4 +64,36 @@ keys = list(obs_dict.keys())
 keys.sort()
 sum_values = [obj.Summary(obs_list, param) for param, obs_list in obs_dict.items()]
 sum_values.sort(key=lambda x: x.param)
+L = sum_values[0].L
 
+utils.init_plotter()
+
+if mode == 'N':
+    N_values = [x.N for x in sum_values]
+    # Plot multiple trayectories for different N
+    trayectories_x = [x.big_position_x_list for x in sum_values]
+    trayectories_y = [x.big_position_y_list for x in sum_values]
+    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L)
+    for i, col in enumerate(colors):
+        utils.print_with_color("N = " + str(N_values[i]) + ", color = " + col, col)
+    # Plot collision_count = f(N)
+
+    # Plot avg_collision_freq = f(N)
+
+    # Plot avg_intercollision_time = f(N)
+
+else:
+    print("Not done yet")
+    # Plot multiple trayectories for different K
+
+    # Plot small_dcm_d = f(T)
+
+    # Plot big_dcm
+
+    # Calculate big_dcm_d
+
+if save_dir:
+    print(f'Saved plots in {save_dir}/')
+else:
+    # Hold execution until all plots are closed
+    utils.hold_execution()
