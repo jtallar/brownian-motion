@@ -4,31 +4,6 @@ import utils
 import math
 import objects as obj
 
-# 3.0
-# Estudiar distintos comportamientos variando el N
-# TODO: Tomamos #Eventos = f(N)? Trayectorias?
-
-# 3.1
-# Frecuencia de colisiones --> Nro de colisiones por unidad de tiempo
-# Promedio de tiempos de colision (intercolision?)
-# Distribucion de probabilidades de los tiempos de colision (o PDF)
-
-# 3.2
-# PDF del |v| de las particulas pequeñas en el ultimo tercio de la sim
-# PDF del |v| de las particulas pequeñas inicialmente (t=0)
-
-# 3.3
-# Trayectoria de particula grande para distintas temperaturas (K)
-# Como se cambia la temperatura en este sistema?
-
-# 3.4
-# Estimar el coeficiente de difusion D de la particula grande (DCM=f(t))
-# Estimar el coeficiente de difusion D de las particulas pequeñas (DCM=f(t))
-# Realizar el ajuste del D con el metodo generico de la teorica 0
-# Describir como se eligen los tiempos en los que se calcula el DCM (dt)
-# Para estas cosas, solo tomar hasta que la particula colisiona con la pared, 
-# tanto para grandes como para chicas. Tomar solo la segunda mitad de sus trayectorias
-
 def get_delta_bins(delta, start, max_mult_inclusive):
     return [x * delta for x in range(start, max_mult_inclusive + 1)]
 
@@ -245,3 +220,17 @@ if out_filename:
             f'{avg_intercollision_time:.7E}\n'
             f'{kinetic_energy:.7E}\n'
         )
+
+
+
+## Trayectorias = f(N) --> N, L, big_position_x_list, big_position_y_list
+# Eventos = f(N) --> N, L, collision_count
+# Prom Frec Col = f(N) --> N, L, collision_freq
+# Prom t Intercol = f(N) --> N, L, avg_intercollision_time
+#### Distribucion tiempos de colision con NMax
+#### Distribucion |v| pequeñas inicial + ultimo tercio con NMax
+## Trayectorias = f(T) --> K, L, init_max_v_mod, big_position_x_list, big_position_y_list
+# DCM p chicas = f(T) --> K, L, init_max_v_mod, small_dcm_D
+#### Grafico DCM p chicas con NMax y |v| <= 2.0
+# DCM p grande = f(T) --> K, L, init_max_v_mod, big_z_dist_list, big_z_dist_time_list
+# Grafico DCM p grande con NMax y |v| <= 2.0 --> K, L, big_z_dist_list, big_z_dist_time_list
