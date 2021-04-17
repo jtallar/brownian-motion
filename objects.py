@@ -84,3 +84,23 @@ class ParticleNode(object):
 
     def __repr__(self):
         return "Node{%s, next=%s}" % (self.particle, self.next)
+
+class Metrics(object):
+    def __init__(self, N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list):
+        self.N = N
+        self.L = L
+        self.kinetic_energy = kinetic_energy
+        self.big_position_x_list = big_position_x_list
+        self.big_position_y_list = big_position_y_list
+        self.collision_count = collision_count
+        self.collision_freq = collision_freq
+        self.avg_intercollision_time = avg_intercollision_time
+        self.small_dcm_D = small_dcm_D
+        self.big_z_dist_list = big_z_dist_list
+        self.big_z_dist_time_list = big_z_dist_time_list
+
+    def __str__(self):
+        return self.__repr__()
+    
+    def __repr__(self):
+        return "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s" % (N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list)
