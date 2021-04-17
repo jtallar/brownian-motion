@@ -69,8 +69,8 @@ L = sum_values[0].L
 utils.init_plotter()
 
 if mode == 'N':
-    N_values = [x.N for x in sum_values]
     # Plot multiple trayectories for different N
+    N_values = [x.N for x in sum_values]
     trayectories_x = [x.big_position_x_list for x in sum_values]
     trayectories_y = [x.big_position_y_list for x in sum_values]
     save_name = save_dir + '/trayectories.png' if save_dir else None
@@ -81,8 +81,11 @@ if mode == 'N':
     save_name = save_dir + '/collision_count.png' if save_dir else None
     utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_count', 'Collision count', 1, sci=False, save_name=save_name)
     # Plot avg_collision_freq = f(N)
-
+    save_name = save_dir + '/collision_freq.png' if save_dir else None
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_freq', 'Average collision frequency', 1, sci=True, save_name=save_name)
     # Plot avg_intercollision_time = f(N)
+    save_name = save_dir + '/avg_intercollision_time.png' if save_dir else None
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'avg_intercollision_time', 'Average intercollision time', 1, sci=True, save_name=save_name)
 
 else:
     print("Not done yet")
