@@ -160,7 +160,7 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
     # Calculate small particles DCM
     if len(small_dcm_ids_set) == small_dcm_count:
         # Plot small DCM to get m from linear regression
-        coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, False, plot=plot_boolean)
+        coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, sci=False, plot=plot_boolean)
         small_dcm_D = coef[0] / 2
         print(f'Small DCM D = {small_dcm_D}')    
     else:
@@ -175,7 +175,7 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
     # Plotings
     if plot_boolean:
         # Small particles DCM was plotted before, will be showed when holding execution
-        # utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, False)
+        # utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, sci=False)
         # Probability of intercollision time
         utils.plot_histogram_density(intercollision_time_list, intercollision_time_bins, 'Time between collision (s)', 'Probability of time', 1, True)
         # Initial probability of |v|
@@ -183,9 +183,9 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
         # Probability of |v| in last third
         utils.plot_histogram_density(all_small_v_mod_list[2*len(all_small_v_mod_list)//3:], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
         # Big particle trayectory zoomed
-        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False)
+        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci=False)
         # Big particle trayectory full box size
-        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, False, min_val=0, max_val=L)
+        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci=False, min_val=0, max_val=L)
         utils.hold_execution()
 
     return obj.Metrics(N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list)

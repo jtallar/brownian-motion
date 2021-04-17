@@ -137,7 +137,7 @@ def plot_values(x_values, x_label, y_values, y_label, precision=2, sci=True, min
     plt.tight_layout()
     plt.show(block=False)
 
-def plot_error_bars_summary(x_values, x_label, sum_values, attribute, y_label, x_prec=2, sci=True, y_min=None, y_max=None, log=False, save_name=None):
+def plot_error_bars_summary(x_values, x_label, sum_values, attribute, y_label, x_prec=2, sci_x=False, sci_y=True, y_min=None, y_max=None, log=False, save_name=None):
     values = []
     values_err = []
     min_dec = getattr(sum_values[0], attribute).dec_count
@@ -148,9 +148,10 @@ def plot_error_bars_summary(x_values, x_label, sum_values, attribute, y_label, x
         if attr.dec_count < min_dec:
             min_dec = attr.dec_count
     # min_dec += 1
-    plot_error_bars(x_values, x_label, values, y_label, values_err, x_prec, min_dec, sci, y_min, y_max, log, save_name)
+    if sci_y: min_dec = 1
+    plot_error_bars(x_values, x_label, values, y_label, values_err, x_prec, min_dec, sci_x, sci_y, y_min, y_max, log, save_name)
 
-def plot_error_bars(x_values, x_label, y_values, y_label, y_error, x_prec=2, y_prec=2, sci=True, y_min=None, y_max=None, log=False, save_name=None):
+def plot_error_bars(x_values, x_label, y_values, y_label, y_error, x_prec=2, y_prec=2, sci_x=False, sci_y=True, y_min=None, y_max=None, log=False, save_name=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
     (_, caps, _) = plt.errorbar(x_values, y_values, yerr=y_error, markersize=6, capsize=20, elinewidth=0.75, linestyle='-',  marker='o')  # Plot some data on the axes
     for cap in caps:
@@ -163,9 +164,11 @@ def plot_error_bars(x_values, x_label, y_values, y_label, y_error, x_prec=2, y_p
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
 
-    if sci:
-        if not log: ax.ticklabel_format(scilimits=(0,0))
+    if sci_x:
+        if not log: ax.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
         ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{x_prec}e'))
+    if sci_y:
+        if not log: ax.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
         ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{y_prec}e'))
 
     plt.grid()

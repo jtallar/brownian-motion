@@ -72,18 +72,18 @@ if mode == 'N':
     trayectories_x = [x.big_position_x_list for x in sum_values]
     trayectories_y = [x.big_position_y_list for x in sum_values]
     save_name = save_dir + '/trayectories_N.png' if save_dir else None
-    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L, save_name=save_name)
+    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, sci=False, min_val=0, max_val=L, save_name=save_name)
     for i, col in enumerate(colors):
         utils.print_with_color(f"N = {N_values[i]}, color = {col}", col)
     # Plot collision_count = f(N)
     save_name = save_dir + '/collision_count.png' if save_dir else None
-    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_count', 'Collision count', 1, sci=False, save_name=save_name)
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_count', 'Collision count', 1, sci_y=True, save_name=save_name)
     # Plot avg_collision_freq = f(N)
     save_name = save_dir + '/collision_freq.png' if save_dir else None
-    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_freq', 'Average collision frequency', 1, sci=True, save_name=save_name)
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_freq', 'Average collision frequency', 1, sci_y=False, save_name=save_name)
     # Plot avg_intercollision_time = f(N)
     save_name = save_dir + '/avg_intercollision_time.png' if save_dir else None
-    utils.plot_error_bars_summary(keys, 'N', sum_values, 'avg_intercollision_time', 'Average intercollision time', 1, sci=True, save_name=save_name)
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'avg_intercollision_time', 'Average intercollision time', 1, sci_y=True, save_name=save_name)
 
 else:
     # Plot multiple trayectories for different K
@@ -91,12 +91,12 @@ else:
     trayectories_x = [x.big_position_x_list for x in sum_values]
     trayectories_y = [x.big_position_y_list for x in sum_values]
     save_name = save_dir + '/trayectories_K.png' if save_dir else None
-    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L, save_name=save_name)
+    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, sci=False, min_val=0, max_val=L, save_name=save_name)
     for i, col in enumerate(colors):
         utils.print_with_color(f"K = {K_values[i]:.7E}, color = {col}", col)
     # Plot small_dcm_d = f(T)
     save_name = save_dir + '/small_dcm_D.png' if save_dir else None
-    utils.plot_error_bars_summary(keys, 'Max initial |v|', sum_values, 'small_dcm_D', 'Small particles D', 1, sci=True, save_name=save_name)
+    utils.plot_error_bars_summary(keys, 'Max initial |v|', sum_values, 'small_dcm_D', 'Small particles D', 1, sci_y=True, save_name=save_name)
     # Plot big_dcm when Max initial |v| = 2.0 if found (if not, take last one)
     big_dcm_list = sum_values[-1].big_dcm_list
     big_dcm_time_list = sum_values[-1].big_dcm_time_list
@@ -106,10 +106,10 @@ else:
             big_dcm_time_list = x.big_dcm_time_list
             print("Plotting Big DCM for |v| = 2.0")
             break
-    utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, False, plot=True)
+    utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, sci=False, plot=True)
     # Calculate big_dcm_d
     big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False)[0] / 2 for x in sum_values]
-    utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, False)
+    utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, sci=False)
 
 if save_dir:
     print(f'Saved plots in {save_dir}/')
