@@ -34,7 +34,7 @@ small_dcm_count = utils.read_config_param(
 plot_boolean = utils.read_config_param(
     config, "plot", lambda el : bool(el), lambda el : False)
 
-metrics = anl.analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, init_max_v_mod, small_dcm_rad, small_dcm_count, plot_boolean)
+metrics = anl.analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, small_dcm_rad, small_dcm_count, plot_boolean)
 
 # If out filename provided, print to file
 if out_filename:

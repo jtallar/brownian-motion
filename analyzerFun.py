@@ -7,7 +7,7 @@ import objects as obj
 def get_delta_bins(delta, start, max_mult_inclusive):
     return [x * delta for x in range(start, max_mult_inclusive + 1)]
 
-def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, init_max_v_mod, small_dcm_rad, small_dcm_count, plot_boolean):
+def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, small_dcm_rad, small_dcm_count, plot_boolean):
     dynamic_file = open(dynamic_filename, "r")
 
     static_file = open(static_filename, "r")
@@ -154,10 +154,11 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
     # Calculate small particles DCM
     if len(small_dcm_ids_set) == small_dcm_count:
         # Plot small DCM to get m from linear regression
-        coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, False)
+        coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, False, plot=plot_boolean)
         small_dcm_D = coef[0] / 2
         print(f'Small DCM D = {small_dcm_D}')    
     else:
+        small_dcm_D = -1
         print('Did not reach desired small_dcm_count, skipping DCM calculation...')
 
     print(f'Collision count = {collision_count}\n'
