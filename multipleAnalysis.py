@@ -73,11 +73,13 @@ if mode == 'N':
     # Plot multiple trayectories for different N
     trayectories_x = [x.big_position_x_list for x in sum_values]
     trayectories_y = [x.big_position_y_list for x in sum_values]
-    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L)
+    save_name = save_dir + '/trayectories.png' if save_dir else None
+    colors = utils.plot_multiple_values(trayectories_x, 'Big particle X (m)', trayectories_y, 'Big particle Y (m)', 1, False, min_val=0, max_val=L, save_name=save_name)
     for i, col in enumerate(colors):
         utils.print_with_color("N = " + str(N_values[i]) + ", color = " + col, col)
     # Plot collision_count = f(N)
-
+    save_name = save_dir + '/collision_count.png' if save_dir else None
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_count', 'Collision count', 1, sci=False, save_name=save_name)
     # Plot avg_collision_freq = f(N)
 
     # Plot avg_intercollision_time = f(N)

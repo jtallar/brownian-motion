@@ -111,7 +111,8 @@ class FullValue(object):
         if std == 0:
             self.dec_count = 3
         else:
-            self.dec_count = math.ceil(abs(math.log10(std)))
+            exp = math.ceil(math.log10(std))
+            self.dec_count = abs(exp) if exp < 0 else 0
         self.media = round(media, self.dec_count)
         self.std = round(std, self.dec_count)
     

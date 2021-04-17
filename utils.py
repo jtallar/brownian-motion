@@ -89,7 +89,7 @@ def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, s
 
     return adj_coef
 
-def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_label, precision=2, sci=True, min_val=None, max_val=None):
+def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_label, precision=2, sci=True, min_val=None, max_val=None, save_name=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
 
     colors = []
@@ -111,7 +111,10 @@ def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_labe
 
     plt.grid()
     plt.tight_layout()
-    plt.show(block=False)
+    if save_name:
+        plt.savefig(save_name)
+    else:
+        plt.show(block=False)
 
     return colors
 
@@ -134,7 +137,20 @@ def plot_values(x_values, x_label, y_values, y_label, precision=2, sci=True, min
     plt.tight_layout()
     plt.show(block=False)
 
-def plot_error_bars(x_values, x_label, y_values, y_label, y_error, x_prec=2, y_prec=2, y_min=None, y_max=None, log=False, save_name=None):
+def plot_error_bars_summary(x_values, x_label, sum_values, attribute, y_label, x_prec=2, sci=True, y_min=None, y_max=None, log=False, save_name=None):
+    values = []
+    values_err = []
+    min_dec = getattr(sum_values[0], attribute).dec_count
+    for x in sum_values:
+        attr = getattr(x, attribute)
+        values.append(attr.media)
+        values_err.append(attr.std)
+        if attr.dec_count < min_dec:
+            min_dec = attr.dec_count
+    # min_dec += 1
+    plot_error_bars(x_values, x_label, values, y_label, values_err, x_prec, min_dec, sci, y_min, y_max, log, save_name)
+
+def plot_error_bars(x_values, x_label, y_values, y_label, y_error, x_prec=2, y_prec=2, sci=True, y_min=None, y_max=None, log=False, save_name=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
     (_, caps, _) = plt.errorbar(x_values, y_values, yerr=y_error, markersize=6, capsize=20, elinewidth=0.75, linestyle='-',  marker='o')  # Plot some data on the axes
     for cap in caps:
@@ -143,13 +159,14 @@ def plot_error_bars(x_values, x_label, y_values, y_label, y_error, x_prec=2, y_p
     ax.set_ylim([y_min, y_max])
     if log:
         ax.set_yscale('symlog', linthresh=1e-3)
-    else:
-        ax.ticklabel_format(scilimits=(0,0))
+
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
 
-    ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{x_prec}e'))
-    ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{y_prec}e'))
+    if sci:
+        if not log: ax.ticklabel_format(scilimits=(0,0))
+        ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{x_prec}e'))
+        ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{y_prec}e'))
 
     plt.grid()
     plt.tight_layout()
