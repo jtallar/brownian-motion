@@ -118,7 +118,7 @@ def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_labe
 
     return colors
 
-def plot_values(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None):
+def plot_values(x_values, x_label, y_values, y_label, precision=2, sci_x=False, sci_y=True, min_val=None, max_val=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
     ax.plot(x_values, y_values)  # Plot some data on the axes
     ax.set_xlabel(x_label)
@@ -128,9 +128,11 @@ def plot_values(x_values, x_label, y_values, y_label, precision=2, sci=True, min
         ax.set_xlim([min_val, max_val])
         ax.set_ylim([min_val, max_val])
 
-    if sci:
-        ax.ticklabel_format(scilimits=(0,0))
+    if sci_x:
+        ax.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
         ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+    if sci_y:
+        ax.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
         ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
 
     plt.grid()
@@ -149,6 +151,9 @@ def plot_error_bars_summary(x_values, x_label, sum_values, attribute, y_label, x
             min_dec = attr.dec_count
     # min_dec += 1
     if sci_y: min_dec = 1
+    print(values)
+    print(values_err)
+    print(min_dec)
     plot_error_bars(x_values, x_label, values, y_label, values_err, x_prec, min_dec, sci_x, sci_y, y_min, y_max, log, save_name)
 
 def plot_error_bars(x_values, x_label, y_values, y_label, y_error, x_prec=2, y_prec=2, sci_x=False, sci_y=True, y_min=None, y_max=None, log=False, save_name=None):

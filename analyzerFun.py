@@ -183,9 +183,9 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
         # Probability of |v| in last third
         utils.plot_histogram_density(all_small_v_mod_list[2*len(all_small_v_mod_list)//3:], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
         # Big particle trayectory zoomed
-        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci=False)
+        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci_y=False)
         # Big particle trayectory full box size
-        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci=False, min_val=0, max_val=L)
+        utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci_y=False, min_val=0, max_val=L)
         utils.hold_execution()
 
     return obj.Metrics(N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list)

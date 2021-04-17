@@ -109,7 +109,7 @@ else:
     utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, sci=False, plot=True)
     # Calculate big_dcm_d
     big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False)[0] / 2 for x in sum_values]
-    utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, sci=False)
+    utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, sci_y=True)
 
 if save_dir:
     print(f'Saved plots in {save_dir}/')
