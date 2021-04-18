@@ -5,6 +5,11 @@ if [ "$#" -ne 3 ]; then
     exit 1
 fi
 
+if [ "$4" -le 1 ]; then
+    echo "Illegal number of repetitions. Must be at least 2." 
+    exit 1
+fi
+
 ROOT_DIR="data_dir"
 if [ -d "$ROOT_DIR" ]; then
     printf '%s\n' "Removing Directory recursively ($ROOT_DIR)"
