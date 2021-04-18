@@ -10,7 +10,7 @@ if [ "$4" -le 1 ]; then
     exit 1
 fi
 
-ROOT_DIR="data_dir"
+ROOT_DIR="data_dir_T_$1"
 if [ -d "$ROOT_DIR" ]; then
     printf '%s\n' "Removing Directory recursively ($ROOT_DIR)"
     rm -rf "$ROOT_DIR"
@@ -53,7 +53,7 @@ done
 # Reenable plotting
 sed -i -e 's/\"plot\": false/\"plot\": true/g' config.json
 
-PICS_DIR="pics_T"
+PICS_DIR="pics_T_$1"
 OUT_FILE="out_T.txt"
 python3.8 multipleAnalysis.py "$ROOT_DIR" 'T' "$PICS_DIR" > "$OUT_FILE"
 mv "$OUT_FILE" "$PICS_DIR"
