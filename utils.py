@@ -63,7 +63,7 @@ def plot_histogram_density(values, n_bins, x_label, y_label, precision=2, sci=Tr
     plt.tight_layout()
     plt.show(block=False)
 
-def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None, plot=True):
+def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None, plot=True, save_name=None):
     adj_coef = np.polyfit(x_values, y_values, 1)
     poly1d_fn = np.poly1d(adj_coef)
 
@@ -85,7 +85,10 @@ def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, s
 
     plt.grid()
     plt.tight_layout()
-    plt.show(block=False)
+    if save_name:
+        plt.savefig(save_name)
+    else:
+        plt.show(block=False)
 
     return adj_coef
 
@@ -118,7 +121,7 @@ def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_labe
 
     return colors
 
-def plot_values(x_values, x_label, y_values, y_label, precision=2, sci_x=False, sci_y=True, min_val=None, max_val=None):
+def plot_values(x_values, x_label, y_values, y_label, precision=2, sci_x=False, sci_y=True, min_val=None, max_val=None, save_name=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
     ax.plot(x_values, y_values)  # Plot some data on the axes
     ax.set_xlabel(x_label)
@@ -137,7 +140,10 @@ def plot_values(x_values, x_label, y_values, y_label, precision=2, sci_x=False, 
 
     plt.grid()
     plt.tight_layout()
-    plt.show(block=False)
+    if save_name:
+        plt.savefig(save_name)
+    else:
+        plt.show(block=False)
 
 def plot_error_bars_summary(x_values, x_label, sum_values, attribute, y_label, x_prec=2, sci_x=False, sci_y=True, y_min=None, y_max=None, log=False, save_name=None):
     values = []
