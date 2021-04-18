@@ -42,6 +42,8 @@ simu.xyz
 static.txt
 dynamic.txt
 data_dir/
+pics_N/
+pics_T/
 
 # Python section
 # Byte-compiled / optimized / DLL files
