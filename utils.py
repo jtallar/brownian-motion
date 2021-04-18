@@ -151,6 +151,7 @@ def plot_error_bars_summary(x_values, x_label, sum_values, attribute, y_label, x
             min_dec = attr.dec_count
     # min_dec += 1
     if sci_y: min_dec = 1
+    print(y_label)
     print(values)
     print(values_err)
     print(min_dec)
