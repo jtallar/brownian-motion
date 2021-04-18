@@ -1,6 +1,6 @@
 {
-    "static_file": "data_dir/2.0/static.txt",
-    "dynamic_file": "data_dir/2.0/dynamic2.txt",
+    "static_file": "data_dir_T_2.0/2.0/static.txt",
+    "dynamic_file": "data_dir_T_2.0/2.0/dynamic20.txt",
 
     "N": 136,
     "L": 6,
@@ -11,7 +11,7 @@
     "max_v_mod": 2.0,
 
     "max_events": 100000,
-    "delta_time_animation": 0.04,
+    "delta_time_animation": 0.05,
     "delta_time_analysis": 0.05,
     "delta_time_intercollition": 1e-4,
     "delta_v_mod": 0.1,
