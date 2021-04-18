@@ -55,6 +55,6 @@ sed -i -e 's/\"plot\": false/\"plot\": true/g' config.json
 
 PICS_DIR="pics_T"
 OUT_FILE="out_T.txt"
-python3.8 multipleAnalysis.py "$ROOT_DIR" 'T'
-# python3.8 multipleAnalysis.py "$ROOT_DIR" 'T' "$PICS_DIR" > "$OUT_FILE"
-# mv "$OUT_FILE" "$PICS_DIR"
+python3.8 multipleAnalysis.py "$ROOT_DIR" 'T' "$PICS_DIR" > "$OUT_FILE"
+mv "$OUT_FILE" "$PICS_DIR"
+echo "If you need live plotting to customize plots, run python3.8 multipleAnalysis.py $ROOT_DIR 'T'"
