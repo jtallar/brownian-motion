@@ -43,6 +43,7 @@ static.txt
 dynamic.txt
 data_dir*/
 pics_*/
+out_console.txt
 
 # Python section
 # Byte-compiled / optimized / DLL files
