@@ -186,4 +186,4 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
         utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci_y=False, min_val=0, max_val=L)
         utils.hold_execution()
 
-    return obj.Metrics(N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list)
+    return obj.Metrics(N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list, small_dcm_list, small_dcm_time_list)

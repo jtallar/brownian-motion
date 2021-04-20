@@ -115,6 +115,23 @@ else:
     big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False) / 2 for x in sum_values]
     save_name = save_dir + '/big_dcm_D.png' if save_dir else None
     utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, sci_y=True, save_name=save_name)
+    # Plot small_dcm when Max initial |v| = 2.0 if found (if not, take last one)
+    small_dcm_list = sum_values[-1].small_dcm_list
+    small_dcm_time_list = sum_values[-1].small_dcm_time_list
+    for x in sum_values:
+        if x.param == 2.0:
+            small_dcm_list = x.small_dcm_list
+            small_dcm_time_list = x.small_dcm_time_list
+            print("Plotting Small DCM for |v| = 2.0")
+            break
+    save_name = save_dir + '/small_dcm_2.0.png' if save_dir else None
+    coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, sci=False, plot=True, save_name=save_name)
+    small_dcm_D = coef / 2
+    print(f'Small DCM D = {small_dcm_D}')
+    # Calculate small_dcm_d
+    big_DCM_Ds = [utils.plot_values_with_adjust(x.small_dcm_time_list[len(x.small_dcm_time_list)//2:], None, x.small_dcm_list[len(x.small_dcm_list)//2:], None, plot=False) / 2 for x in sum_values]
+    save_name = save_dir + '/small_dcm_D.png' if save_dir else None
+    utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Small particles D', 2, sci_y=True, save_name=save_name)
 
 if save_dir:
     print(f'Saved plots in {save_dir}/')

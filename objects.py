@@ -111,7 +111,7 @@ class IdDistance(object):
         return self.dist < other.dist
 
 class Metrics(object):
-    def __init__(self, N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list):
+    def __init__(self, N, L, kinetic_energy, big_position_x_list, big_position_y_list, collision_count, collision_freq, avg_intercollision_time, small_dcm_D, big_z_dist_list, big_z_dist_time_list, small_z_sq_dist_list, small_z_sq_dist_time_list):
         self.N = N
         self.L = L
         self.kinetic_energy = kinetic_energy
@@ -123,6 +123,8 @@ class Metrics(object):
         self.small_dcm_D = small_dcm_D
         self.big_z_dist_list = big_z_dist_list
         self.big_z_dist_time_list = big_z_dist_time_list
+        self.small_z_sq_dist_list = small_z_sq_dist_list
+        self.small_z_sq_dist_time_list = small_z_sq_dist_time_list
 
     def __str__(self):
         return self.__repr__()
@@ -156,6 +158,8 @@ class Summary(object):
         kinetic_energy_list = []
         big_z_dist_superlist = []
         big_z_dist_time_superlist = []
+        small_z_sq_dist_superlist = []
+        small_z_sq_dist_time_superlist = []
 
         for metric in metric_list:
             # Save last values for some params
@@ -174,6 +178,8 @@ class Summary(object):
             
             big_z_dist_superlist.append(metric.big_z_dist_list)
             big_z_dist_time_superlist.append(metric.big_z_dist_time_list)
+            small_z_sq_dist_superlist.append(metric.small_z_sq_dist_list)
+            small_z_sq_dist_time_superlist.append(metric.small_z_sq_dist_time_list)
 
         # Create Full values for lists
         self.collision_count = FullValue(sts.mean(collision_count_list), sts.stdev(collision_count_list))
@@ -185,8 +191,11 @@ class Summary(object):
         # Leave everything to calculate big_dcm_D from superlists
         self.big_dcm_list = []
         self.big_dcm_time_list = []
+        self.small_dcm_list = []
+        self.small_dcm_time_list = []
         if big_dcm:
             self.build_big_dcm(big_z_dist_superlist, big_z_dist_time_superlist)
+            self.build_small_dcm(small_z_sq_dist_superlist, small_z_sq_dist_time_superlist)
     
     def build_big_dcm(self, big_z_dist_superlist, big_z_dist_time_superlist):
         big_collided = False
@@ -206,6 +215,25 @@ class Summary(object):
                 self.big_dcm_time_list.append(cur_time_sum / len(big_z_dist_superlist))
 
             time_index += 1        
+
+    def build_small_dcm(self, small_z_sq_dist_superlist, small_z_sq_dist_time_superlist):
+        small_collided = False
+        time_index = 0
+        while not small_collided:
+            small_z_dist_sq_sum = 0
+            cur_time_sum = 0
+            for i in range(len(small_z_sq_dist_superlist)):
+                if time_index >= len(small_z_sq_dist_superlist[i]):
+                    small_collided = True
+                    break
+                small_z_dist_sq_sum += small_z_sq_dist_superlist[i][time_index] # Already squared
+                cur_time_sum += small_z_sq_dist_time_superlist[i][time_index]
+            
+            if not small_collided:
+                self.small_dcm_list.append(small_z_dist_sq_sum / len(small_z_sq_dist_superlist))
+                self.small_dcm_time_list.append(cur_time_sum / len(small_z_sq_dist_superlist))
+
+            time_index += 1  
 
     def __str__(self):
         return self.__repr__()
