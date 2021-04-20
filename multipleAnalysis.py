@@ -55,6 +55,7 @@ for directory in root_entries:
     for filename in entries:
         if filename == 'static.txt': continue
         dynamic_filename = directory + '/' + filename
+        print(dynamic_filename)
         obs_dict[init_param].append(anl.analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_v_mod, small_dcm_count, False))
 
 # Get summarized values list
@@ -108,10 +109,10 @@ else:
             break
     save_name = save_dir + '/big_dcm_2.0.png' if save_dir else None
     coef = utils.plot_values_with_adjust(big_dcm_time_list[len(big_dcm_time_list)//2:], 'Time (s)', big_dcm_list[len(big_dcm_list)//2:], 'Big DCM (m^2)', 2, sci=False, plot=True, save_name=save_name)
-    big_dcm_D = coef[0] / 2
+    big_dcm_D = coef / 2
     print(f'Big DCM D = {big_dcm_D}')
     # Calculate big_dcm_d
-    big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False)[0] / 2 for x in sum_values]
+    big_DCM_Ds = [utils.plot_values_with_adjust(x.big_dcm_time_list[len(x.big_dcm_time_list)//2:], None, x.big_dcm_list[len(x.big_dcm_list)//2:], None, plot=False) / 2 for x in sum_values]
     save_name = save_dir + '/big_dcm_D.png' if save_dir else None
     utils.plot_values(keys, 'Max initial |v|', big_DCM_Ds, 'Big particle D', 2, sci_y=True, save_name=save_name)
 

@@ -101,14 +101,51 @@ def plot_histogram_density(values, n_bins, x_label, y_label, precision=2, sci_x=
 
     plt.show(block=False)
 
-def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None, plot=True, save_name=None):
-    adj_coef = np.polyfit(x_values, y_values, 1)
-    poly1d_fn = np.poly1d(adj_coef)
+# Linear regression with b = 0
+def f_adj(x, c):
+    return c * x
 
-    if not plot: return adj_coef
+def calculate_regression(x_values, y_values, plot_error=False):
+    min_error, min_c = float("Inf"), 10
+    error_list = []
+    c_list = []
+
+    for c in np.arange(-2, 2, 0.0001):
+        error_sum = 0
+        for i in range(0, len(x_values)):
+            error_sum += (y_values[i] - f_adj(x_values[i], c)) ** 2
+        
+        error_list.append(error_sum)
+        c_list.append(c)
+
+        if error_sum < min_error:
+            min_error = error_sum
+            min_c = c
+    
+    if plot_error:
+        # Plot Error = f(c)
+        fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
+        ax.plot(c_list, error_list)
+        ax.set_xlabel('c')
+        ax.set_ylabel('Error')
+
+        plt.grid()
+        plt.tight_layout()
+        plt.show(block=False)
+
+    return min_c, min_error
+
+def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None, plot=True, save_name=None):
+    # adj_coef = np.polyfit(x_values, y_values, 1)
+    # poly1d_fn = np.poly1d(adj_coef)
+
+    c, err = calculate_regression(x_values, y_values, plot)
+    print(c, err)
+
+    if not plot: return c
 
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
-    ax.plot(x_values, y_values, 'yo', x_values, poly1d_fn(x_values), '-k')  # Plot some data on the axes
+    ax.plot(x_values, y_values, 'yo', x_values, [f_adj(x, c) for x in x_values], '-k')  # Plot some data on the axes
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     
@@ -128,7 +165,7 @@ def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, s
     else:
         plt.show(block=False)
 
-    return adj_coef
+    return c
 
 def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_label, precision=2, sci=True, min_val=None, max_val=None, save_name=None):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.

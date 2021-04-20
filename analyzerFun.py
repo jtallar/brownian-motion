@@ -157,17 +157,13 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
     v_mod_bins = get_delta_bins(delta_v_mod, 0, math.ceil(max_small_v_mod / delta_v_mod))
     # Calculate average intercollision time
     avg_intercollision_time = sum_intercollision_time / collision_count
+    # Plot small DCM to get m from linear regression
+    coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, sci=False, plot=plot_boolean)
     # Calculate small particles DCM
-    if len(small_dcm_ids_set) == small_dcm_count:
-        # Plot small DCM to get m from linear regression
-        coef = utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, sci=False, plot=plot_boolean)
-        small_dcm_D = coef[0] / 2
-        print(f'Small DCM D = {small_dcm_D}')    
-    else:
-        small_dcm_D = -1
-        print('Did not reach desired small_dcm_count, skipping DCM calculation...')
+    small_dcm_D = coef / 2
 
-    print(f'Collision count = {collision_count}\n'
+    print(f'Small DCM D = {small_dcm_D}\n'
+        f'Collision count = {collision_count}\n'
         f'Collision frequency = {collision_freq}\n'
         f'Intercollision avg time = {avg_intercollision_time:.7E}\n'
         f'Constant kinetic energy = {kinetic_energy:.7E}\n')
