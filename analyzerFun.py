@@ -177,11 +177,13 @@ def analyze(static_filename, dynamic_filename, delta_t, delta_t_intercol, delta_
         # Small particles DCM was plotted before, will be showed when holding execution
         # utils.plot_values_with_adjust(small_dcm_time_list[len(small_dcm_time_list)//2:], 'Time (s)', small_dcm_list[len(small_dcm_list)//2:], 'Small DCM (m^2)', 2, sci=False)
         # Probability of intercollision time
-        utils.plot_histogram_density(intercollision_time_list, intercollision_time_bins, 'Time between collision (s)', 'Probability of time', 1, True)
+        utils.plot_histogram_density(intercollision_time_list, intercollision_time_bins, 'Time between collision (s)', 'Probability of time', 1, sci_x=True, sci_y=False, log=True)
         # Initial probability of |v|
-        utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
+        utils.plot_histogram_density(init_small_v_mod_list, v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, sci_x=False, sci_y=False)
         # Probability of |v| in last third
-        utils.plot_histogram_density(all_small_v_mod_list[2*len(all_small_v_mod_list)//3:], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, False)
+        utils.plot_histogram_density(all_small_v_mod_list[2*len(all_small_v_mod_list)//3:], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, sci_x=False, sci_y=False)
+        # Probability of |v| together (init and last third)
+        utils.plot_mult_histogram_density(init_small_v_mod_list, all_small_v_mod_list[2*len(all_small_v_mod_list)//3:], v_mod_bins, '|v| (m/s)', 'Probability of |v|', 1, sci_x=False, sci_y=False)
         # Big particle trayectory zoomed
         utils.plot_values(big_position_x_list, 'Big particle X (m)', big_position_y_list, 'Big particle Y (m)', 1, sci_y=False)
         # Big particle trayectory full box size

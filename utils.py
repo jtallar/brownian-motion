@@ -47,20 +47,58 @@ class MathTextSciFormatter(mticker.Formatter):
 def init_plotter():
     plt.rcParams.update({'font.size': 20})
 
-def plot_histogram_density(values, n_bins, x_label, y_label, precision=2, sci=True):
+def plot_mult_histogram_density(values_1, values_2, n_bins, x_label, y_label, precision=2, sci_x=False, sci_y=True):
     fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
-    weights = np.full(len(values), 1.0 / len(values))
-    ax.hist(values, bins=n_bins, weights=weights)  # Plot some data on the axes
+    weights = np.full(len(values_1), 1.0 / len(values_1))
+    ax.hist(values_1, bins=n_bins, alpha=0.7, weights=weights, label='Initial')  # Plot some data on the axes
+    weights = np.full(len(values_2), 1.0 / len(values_2))
+    ax.hist(values_2, bins=n_bins, alpha=0.7, weights=weights, label='Last third')  # Plot some data on the axes
+    
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
 
-    if sci:
-        ax.ticklabel_format(scilimits=(0,0))
+    if sci_x:
+        ax.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
         ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+    if sci_y:
+        ax.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+        ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+
+    fig.legend(loc='upper right')
+    plt.grid()
+    plt.tight_layout()
+    plt.show(block=False)
+
+def plot_histogram_density(values, n_bins, x_label, y_label, precision=2, sci_x=False, sci_y=True, log=False):
+    fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
+    weights = np.full(len(values), 1.0 / len(values))
+    _n, _bins, _patches = ax.hist(values, bins=n_bins, weights=weights)  # Plot some data on the axes
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+    if sci_x:
+        ax.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+        ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+    if sci_y:
+        ax.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
         ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
 
     plt.grid()
     plt.tight_layout()
+
+    if log:
+        step = n_bins[1]
+        bin_center = [x + step for x in n_bins]
+        fig, ax = plt.subplots(figsize=(12, 10))  # Create a figure containing a single axes.
+        ax.plot(bin_center[:len(bin_center) - 1], _n)
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+        ax.set_yscale('symlog', linthresh=1e-3)
+        ax.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+        ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
+        plt.grid()
+        plt.tight_layout()
+
     plt.show(block=False)
 
 def plot_values_with_adjust(x_values, x_label, y_values, y_label, precision=2, sci=True, min_val=None, max_val=None, plot=True, save_name=None):
@@ -112,6 +150,7 @@ def plot_multiple_values(x_values_superlist, x_label, y_values_superlist, y_labe
         ax.xaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
         ax.yaxis.set_major_formatter(MathTextSciFormatter(f'%1.{precision}e'))
 
+    fig.legend(loc='upper left')
     plt.grid()
     plt.tight_layout()
     if save_name:
