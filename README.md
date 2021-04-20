@@ -74,7 +74,7 @@ Run `python3 analysis.py [out_filename]`, using the following parameters from `c
 If a filename is provided, some metrics will be written to filename. If plot is false, then no graphs are plotted.
 
 Metrics calculated are:
-- Small DCM D
+- Small DCM D (single simulation)
 - Collision count
 - Collision frequency
 - Average time between collisions
@@ -104,6 +104,8 @@ If mode is T, plots shown are:
 - Small particles DCM D value dependant on initial max_v_mod
 - Big particle DCM dependant on time for `max_v_mod` = 2.0, for last half of simulation
 - Big particle DCM D value dependant on initial max_v_mod
+- Small particles DCM dependant on time for `max_v_mod` = 2.0, for last half of simulation
+- Small particles DCM D value dependant on initial max_v_mod
 
 ### multipleN.sh
 This script can be used to run generation and simulation multiple times, given a starting N value, a step to increase N each iteration and the number of repetitions (>= 2) to run for each N in range.
