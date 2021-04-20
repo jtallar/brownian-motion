@@ -80,10 +80,10 @@ if mode == 'N':
     utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_count', 'Collision count', 1, sci_y=True, save_name=save_name)
     # Plot avg_collision_freq = f(N)
     save_name = save_dir + '/collision_freq.png' if save_dir else None
-    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_freq', 'Average collision frequency', 1, sci_y=False, save_name=save_name)
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'collision_freq', 'Average collision frequency (1/s)', 1, sci_y=False, save_name=save_name)
     # Plot avg_intercollision_time = f(N)
     save_name = save_dir + '/avg_intercollision_time.png' if save_dir else None
-    utils.plot_error_bars_summary(keys, 'N', sum_values, 'avg_intercollision_time', 'Average intercollision time', 1, sci_y=True, save_name=save_name)
+    utils.plot_error_bars_summary(keys, 'N', sum_values, 'avg_intercollision_time', 'Average intercollision time (s)', 1, sci_y=True, save_name=save_name)
 
 else:
     # Plot multiple trayectories for different K
@@ -96,7 +96,7 @@ else:
         utils.print_with_color(f"K = {K_values[i]:.7E}, color = {col}", col)
     # Plot small_dcm_d = f(T)
     save_name = save_dir + '/small_dcm_D.png' if save_dir else None
-    utils.plot_error_bars_summary(keys, 'Max initial |v|', sum_values, 'small_dcm_D', 'Small particles D', 1, sci_y=True, save_name=save_name)
+    utils.plot_error_bars_summary(keys, 'Max initial |v|', sum_values, 'small_dcm_D', 'Small particles D (m^2/s)', 1, sci_y=True, save_name=save_name)
     # Plot big_dcm when Max initial |v| = 2.0 if found (if not, take last one)
     big_dcm_list = sum_values[-1].big_dcm_list
     big_dcm_time_list = sum_values[-1].big_dcm_time_list
