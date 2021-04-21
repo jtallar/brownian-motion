@@ -1,6 +1,6 @@
 {
-    "static_file": "data_dir_N_101/136/static.txt",
-    "dynamic_file": "data_dir_N_101/136/dynamic1.txt",
+    "static_file": "static.txt",
+    "dynamic_file": "dynamic.txt",
 
     "N": 136,
     "L": 6,
